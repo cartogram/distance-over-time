@@ -8,7 +8,7 @@ on:
 
 defaults:
   run:
-    working-directory: apps/distance-over-time
+    working-directory: ./apps/distance-over-time
 
 permissions:
   actions: write

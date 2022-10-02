@@ -6,6 +6,10 @@ on:
       - dev
   pull_request: {}
 
+defaults:
+  run:
+    working-directory: apps/distance-over-time
+
 permissions:
   actions: write
   contents: read

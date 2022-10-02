@@ -52,7 +52,7 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-engines
 
       - name: 🔎 Type check
-        run: yarn run typecheck --if-present
+        run: yarn run typecheck
 
   vitest:
     name: ⚡ Vitest

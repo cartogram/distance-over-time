@@ -1,10 +1,11 @@
-import { log } from "..";
+import { log } from '..'
+import { vi } from 'vitest'
 
-jest.spyOn(global.console, "log");
+vi.spyOn(global.console, 'log')
 
-describe("logger", () => {
-  it("prints a message", () => {
-    log("hello");
-    expect(console.log).toBeCalled();
-  });
-});
+describe('logger', () => {
+  it('prints a message', () => {
+    log('hello')
+    expect(console.log).toBeCalled()
+  })
+})

@@ -6,10 +6,6 @@ on:
       - dev
   pull_request: {}
 
-defaults:
-  run:
-    working-directory: ./apps/distance-over-time
-
 permissions:
   actions: write
   contents: read
@@ -29,14 +25,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16
+          cache: "yarn"
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: Install the packages
+        run: yarn install --frozen-lockfile --ignore-engines
 
       - name: 🔬 Lint
-        run: npm run lint
+        run: yarn lint
 
   typecheck:
     name: ʦ TypeScript
@@ -53,13 +48,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: Install the packages
+        run: yarn install --frozen-lockfile --ignore-engines
 
       - name: 🔎 Type check
-        run: npm run typecheck --if-present
+        run: yarn run typecheck --if-present
 
   vitest:
     name: ⚡ Vitest
@@ -76,13 +69,11 @@ jobs:
         with:
           node-version: 16
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: Install the packages
+        run: yarn install --frozen-lockfile --ignore-engines
 
       - name: ⚡ Run vitest
-        run: npm run test -- --coverage
+        run: yarn test -- --coverage
 
   cypress:
     name: ⚫️ Cypress
@@ -102,10 +93,8 @@ jobs:
         with:
           node-version: 16
 
-      - name: 📥 Download deps
-        uses: bahmutov/npm-install@v1
-        with:
-          useLockFile: false
+      - name: Install the packages
+        run: yarn install --frozen-lockfile --ignore-engines
 
       - name: 🐳 Docker compose
         # the sleep is just there to give time for postgres to get started
@@ -117,12 +106,12 @@ jobs:
         run: npx prisma migrate reset --force
 
       - name: ⚙️ Build
-        run: npm run build
+        run: yarn build
 
       - name: 🌳 Cypress run
         uses: cypress-io/github-action@v4
         with:
-          start: npm run start:mocks
+          start: yarn run start:mocks
           wait-on: "http://localhost:8811"
         env:
           PORT: "8811"

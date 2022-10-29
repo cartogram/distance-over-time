@@ -1,0 +1,8 @@
+{
+  "name": "@cartogram/config",
+  "version": "0.0.0",
+  "description": "Common configs for cartogram projects",
+  "main": "src/prettier.json",
+  "author": "Matt Seccafien (aka Cartogram)",
+  "license": "MIT"
+}

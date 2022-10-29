@@ -1,11 +1,11 @@
-import { Form } from '@remix-run/react'
-import { Wordmark, Mast, Content } from '~/components'
-import { useWindowSize } from '~/hooks'
+import {Form} from '@remix-run/react'
+import {Wordmark, Mast, Content} from '~/components'
+import {useWindowSize} from '~/hooks'
 
 export function action() {
   console.log('hey')
 
-  return json({ message: `Hello, ${name}` })
+  return json({message: `Hello, ${name}`})
 }
 
 export default function Index() {
@@ -16,8 +16,8 @@ export default function Index() {
       <Content>
         <Mast
           links={[
-            { content: 'Instagram', href: '' },
-            { content: 'Strava', href: '' },
+            {content: 'Instagram', href: ''},
+            {content: 'Strava', href: ''},
           ]}
         />
         <Form method="post">

@@ -1,4 +1,4 @@
-import type { LinksFunction, MetaFunction } from '@remix-run/node'
+import type {LinksFunction, MetaFunction} from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -10,7 +10,7 @@ import {
 import styles from '~/styles.css'
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: styles },
+  {rel: 'stylesheet', href: styles},
   {
     rel: 'stylesheet',
     href:

@@ -1,5 +1,5 @@
-import { log } from '..'
-import { vi } from 'vitest'
+import {log} from '..'
+import {vi} from 'vitest'
 
 vi.spyOn(global.console, 'log')
 

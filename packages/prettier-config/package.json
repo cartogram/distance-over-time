@@ -1,5 +1,5 @@
 {
-  "name": "@cartogram/config",
+  "name": "@cartogram/prettier-config",
   "version": "0.0.0",
   "description": "Common configs for cartogram projects",
   "main": "src/prettier.json",

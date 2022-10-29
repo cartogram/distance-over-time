@@ -1,20 +1,18 @@
 {
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "extends": "@cartogram/tsconfig/remix.json",
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "ES2019"],
+    "baseUrl": ".",
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2019"],
+    "strict": true,
+    "target": "ES2019",
     "esModuleInterop": true,
+    "isolatedModules": true,
     "jsx": "react-jsx",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "target": "ES2019",
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "allowJs": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["./app/*"]
-    },
     "noEmit": true,
-    "isolatedModules": true
-  }
+    "resolveJsonModule": true
+  },
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"]
 }

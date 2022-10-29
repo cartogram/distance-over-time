@@ -17,7 +17,9 @@
   "devDependencies": {
     "prettier": "^2.7.1",
     "turbo": "^1.6.2",
-    "@cartogram/config": "*"
+    "@cartogram/tsconfig": "*",
+    "@cartogram/prettier-config": "*",
+    "eslint-config-cartogram": "*"
   },
   "prettier": "@cartogram/config"
 }

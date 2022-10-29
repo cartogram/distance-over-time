@@ -18,9 +18,9 @@
   "devDependencies": {
     "@types/jest": "^26.0.22",
     "eslint": "^7.32.0",
-    "eslint-config-custom": "*",
+    "eslint-config-cartogram": "*",
     "vitest": "^0.23.4",
-    "tsconfig": "*",
+    "@cartogram/tsconfig": "*",
     "typescript": "^4.8.3"
   }
 }

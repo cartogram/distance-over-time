@@ -68,6 +68,14 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Install the packages
+        run: yarn install --frozen-lockfile --ignore-engines
+
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:

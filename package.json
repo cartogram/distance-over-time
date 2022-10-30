@@ -11,7 +11,6 @@
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "typecheck": "turbo run typecheck",
     "start": "turbo run start"
   },
   "devDependencies": {
@@ -19,7 +18,12 @@
     "turbo": "^1.6.2",
     "@cartogram/tsconfig": "*",
     "@cartogram/prettier-config": "*",
-    "eslint-config-cartogram": "*"
+    "@cartogram/eslint-config": "*"
   },
-  "prettier": "@cartogram/config"
+  "eslintConfig": {
+    "extends": [
+      "@cartogram/eslint-config/workspace"
+    ]
+  },
+  "prettier": "@cartogram/prettier-config"
 }

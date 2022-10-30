@@ -13,14 +13,18 @@
     "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
     "dev": "tsc -w",
     "lint": "TIMING=1 eslint src/**/*.ts* --fix",
-    "test": "vitest --globals"
+    "test": "vitest run"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.22",
-    "eslint": "^7.32.0",
-    "eslint-config-cartogram": "*",
     "vitest": "^0.23.4",
+    "eslint": "^7.32.0",
+    "@cartogram/eslint-config": "*",
     "@cartogram/tsconfig": "*",
     "typescript": "^4.8.3"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@cartogram/eslint-config/app"
+    ]
   }
 }

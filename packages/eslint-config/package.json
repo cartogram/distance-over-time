@@ -1,15 +1,55 @@
 {
-  "name": "eslint-config-cartogram",
-  "version": "0.0.0",
-  "private": true,
+  "name": "@cartogram/eslint-config",
+  "type": "commonjs",
+  "version": "0.1.15",
   "license": "MIT",
-  "main": "index.js",
-  "dependencies": {
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "7.28.0",
-    "eslint-config-turbo": "latest"
+  "exports": {
+    ".": {
+      "require": "./index.js"
+    },
+    "./app": {
+      "require": "./app.js"
+    },
+    "./project": {
+      "require": "./project.js"
+    },
+    "./react": {
+      "require": "./react.js"
+    },
+    "./workspace": {
+      "require": "./workspace.js"
+    }
   },
-  "publishConfig": {
-    "access": "public"
+  "dependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.29.0",
+    "@typescript-eslint/parser": "^5.29.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-jsx-a11y": "^6.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.30.0",
+    "eslint-plugin-turbo": "^0.0.4",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.7.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.0"
+  },
+  "peerDependencies": {
+    "typescript": "^4.7.0"
+  },
+  "peerDependenciesMeta": {
+    "typescript": {
+      "optional": true
+    }
+  },
+  "eslintConfig": {
+    "extends": [
+      "@cartogram/eslint-config/project"
+    ],
+    "env": {
+      "node": true
+    }
   }
 }

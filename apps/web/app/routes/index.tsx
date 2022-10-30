@@ -1,3 +1,4 @@
+import {CounterButton} from '@cartogram/ui'
 export default function Index() {
   return (
     <div style={{fontFamily: 'system-ui, sans-serif', lineHeight: '1.4'}}>
@@ -27,6 +28,7 @@ export default function Index() {
           </a>
         </li>
       </ul>
+      <CounterButton />
     </div>
   )
 }

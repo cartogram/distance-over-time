@@ -27,9 +27,6 @@
     },
     "deploy": {
       "cache": false
-    },
-    "typecheck": {
-      "cache": false
     }
   }
 }

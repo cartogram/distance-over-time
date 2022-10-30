@@ -1,8 +1,1 @@
-module.exports = {
-  extends: ['turbo', 'prettier'],
-  settings: {
-    react: {
-      version: 'detect',
-    },
-  },
-};
+module.exports = require('./core.js');

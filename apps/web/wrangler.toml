@@ -6,6 +6,3 @@ compatibility_date = "2022-04-05"
 
 [site]
   bucket = "./public"
-
-[build]
-  command = "yarn build"

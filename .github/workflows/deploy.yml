@@ -77,9 +77,7 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-engines
 
       - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
-          workingDirectory: 'apps/web'
+        run: yarn deploy
         env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}

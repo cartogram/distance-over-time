@@ -12,7 +12,10 @@
     "jsx": "react-jsx",
     "moduleResolution": "node",
     "noEmit": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      "~/*": ["./app/*"]
+    }
   },
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"]
 }

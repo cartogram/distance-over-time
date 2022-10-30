@@ -1,18 +1,22 @@
 {
-  "extends": "@cartogram/tsconfig/remix.json",
+  "include": ["remix.env.d.ts", "app/**/*.ts", "app/**/*.tsx", "worker/**.ts"],
   "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "jsx": "react-jsx",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "target": "ESNext",
+    "strict": true,
+    "types": ["@cloudflare/workers-types"],
+    "paths": {
+      "~/*": ["./app/*"]
+    },
+    "noEmit": true,
     "baseUrl": ".",
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
-    "lib": ["DOM", "DOM.Iterable", "ES2019"],
-    "strict": true,
-    "target": "ES2019",
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "moduleResolution": "node",
-    "noEmit": true,
-    "resolveJsonModule": true
-  },
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"]
+    "isolatedModules": true
+  }
 }

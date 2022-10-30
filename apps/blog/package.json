@@ -30,9 +30,6 @@
     "@cartogram/eslint-config": "*",
     "typescript": "^4.8.3"
   },
-  "engines": {
-    "node": ">=16.13"
-  },
   "eslintConfig": {
     "extends": [
       "@cartogram/eslint-config/app"

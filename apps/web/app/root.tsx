@@ -7,12 +7,22 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
+import styles from '~/styles.css'
+import ui from '@cartogram/ui/index.css'
+
+export const links = () => [
+  {rel: 'stylesheet', href: ui},
+
+  {rel: 'stylesheet', href: styles},
+]
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
   title: 'New Remix App',
   viewport: 'width=device-width,initial-scale=1',
 })
+
+// import '@cartogram/ui/index.css'
 
 export default function App() {
   return (

@@ -10,6 +10,8 @@ import {
 import styles from '~/styles.css'
 
 export const links: LinksFunction = () => [
+  {rel: 'stylesheet', href: './node_modules/@cartogram/ui/index.css'},
+
   {rel: 'stylesheet', href: styles},
   {
     rel: 'stylesheet',

@@ -1,6 +1,8 @@
 import * as React from 'react'
 
-export const NewTabLink = ({
+import './Link.css'
+
+export const Link = ({
   children,
   href,
   ...other
@@ -9,7 +11,7 @@ export const NewTabLink = ({
   href: string
 }) => {
   return (
-    <a target="_blank" rel="noreferrer" href={href} {...other}>
+    <a className="Link" target="_blank" rel="noreferrer" href={href} {...other}>
       {children}
     </a>
   )

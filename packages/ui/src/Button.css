@@ -1,0 +1,11 @@
+.Button {
+  background: none;
+  padding: 0;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: 2em;
+  font-family: inherit;
+  position: absolute;
+  bottom: 2em;
+}

@@ -1,0 +1,12 @@
+/* 
+ * Variables 
+ * --------------------------------------------------------------
+ */
+
+:root {
+  --color-dark: rgb(14, 20, 67);
+  --font-family-sans: 'General Sans', sans-serif;
+  --font-family-serif: 'Zodiak', 'Stardom', serif;
+  --font-family-mono: 'JetBrains Mono', sans-serif;
+  --light: rgb(255, 254, 244);
+}

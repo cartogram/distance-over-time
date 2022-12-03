@@ -1,3 +1,11 @@
-.body {
-  background: blue;
+/* 
+ * Globals 
+ * --------------------------------------------------------------
+ */
+
+body {
+  font-family: var(--font-family-sans);
+  text-align: left;
+  color: var(--color-dark);
+  background: var(--light);
 }

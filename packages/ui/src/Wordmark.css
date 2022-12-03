@@ -1,0 +1,17 @@
+.Wordmark {
+  font-weight: 500;
+  font-size: 0.8em;
+  display: block;
+  font-family: var(--font-family-mono);
+  padding: 0 0 5em;
+  text-transform: lowercase;
+}
+
+.Tagline {
+  font-weight: 500;
+  font-size: 4em;
+  display: block;
+  font-family: var(--font-family-sans);
+  line-height: 1.2;
+  padding: 0 0 5em;
+}

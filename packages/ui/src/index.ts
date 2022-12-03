@@ -1,6 +1,9 @@
+import './reset.css'
+import './variables.css'
+import './global.css'
+
 export {Link} from './Link'
-export {CounterButton} from './CounterButton'
+export {Button} from './Button'
 export {Text} from './Text'
 export {Wordmark} from './Wordmark'
-
-import './global.css'
+export {Main} from './Main'

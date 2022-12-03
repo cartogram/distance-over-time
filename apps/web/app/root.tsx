@@ -11,9 +11,12 @@ import styles from '~/styles.css'
 import ui from '@cartogram/ui/index.css'
 
 export const links = () => [
-  {rel: 'stylesheet', href: ui},
-
   {rel: 'stylesheet', href: styles},
+  {
+    rel: 'stylesheet',
+    href: 'https://api.fontshare.com/v2/css?f[]=jet-brains-mono@1,2&f[]=general-sans@600&f[]=stardom@400&f[]=satoshi@1,2&f[]=zodiak@1&display=swap',
+  },
+  {rel: 'stylesheet', href: ui},
 ]
 
 export const meta: MetaFunction = () => ({

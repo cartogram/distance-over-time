@@ -1,19 +1,20 @@
 import React from 'react'
 import {render, fireEvent, screen} from '@testing-library/react'
 
-import {describe, expect, it} from 'vitest'
+import {describe, expect, it, vi} from 'vitest'
 
-import {CounterButton} from '../CounterButton'
+import {Button} from '../Button'
 
-describe('CounterButton', () => {
-  it('renders without crashing', async () => {
-    render(<CounterButton />)
+describe('Button', () => {
+  it('calls the onClick prop when clicked', async () => {
+    const mockOnClick = vi.fn()
+
+    render(<Button onClick={mockOnClick}>Button</Button>)
+
     const button = await screen.findByRole('button')
-
-    expect(button).toHaveTextContent('Count: 0')
 
     await fireEvent.click(button)
 
-    expect(button).toHaveTextContent('Count: 1')
+    expect(mockOnClick).toHaveBeenCalled()
   })
 })

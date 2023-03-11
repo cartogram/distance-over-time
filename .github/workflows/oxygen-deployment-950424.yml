@@ -37,6 +37,8 @@ jobs:
         with:
           path: ./apps/web
           oxygen_deployment_token: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_950424 }}
+          oxygen_worker_dir: dist/worker
+          oxygen_client_dir: dist/client
           build_command: 'HYDROGEN_ASSET_BASE_URL=$OXYGEN_ASSET_BASE_URL yarn build'
           commit_message: ${{ github.event.head_commit.message || 'Manual deployment' }}
           commit_timestamp: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at }}

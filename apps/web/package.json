@@ -2,10 +2,9 @@
   "name": "distance-over-time",
   "version": "0.0.0",
   "scripts": {
-    "build": "remix build",
-    "deploy": "wrangler publish",
+    "build": "shopify hydrogen build",
     "dev": "shopify hydrogen dev",
-    "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
+    "preview": "shopify hydrogen preview",
     "lint": "eslint ./app/**/*.ts* --fix"
   },
   "dependencies": {

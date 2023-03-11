@@ -1,6 +1,7 @@
 // Virtual entry point for the app
 import * as remixBuild from '@remix-run/dev/server-build'
 import {createStorefrontClient, storefrontRedirect} from '@shopify/hydrogen'
+import {createClient} from '@supabase/supabase-js'
 import {
   createRequestHandler,
   getBuyerIp,
@@ -33,6 +34,14 @@ export default {
       ])
 
       /**
+       * Create supabase client.
+       */
+      const supabase = createClient(
+        env.PUBLIC_SUPABASE_URL,
+        env.PUBLIC_SUPABASE_ANON_KEY,
+      )
+
+      /**
        * Create Hydrogen's Storefront client.
        */
       const {storefront} = createStorefrontClient({
@@ -55,7 +64,7 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => ({session, storefront, env}),
+        getLoadContext: () => ({session, supabase, storefront, env}),
       })
 
       const response = await handleRequest(request)

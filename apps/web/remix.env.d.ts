@@ -4,6 +4,7 @@
 
 import type {Storefront} from '@shopify/hydrogen'
 import type {HydrogenSession} from './server'
+import type {SupabaseClient} from '@supabase/supabase-js'
 
 declare global {
   /**
@@ -21,6 +22,8 @@ declare global {
     PUBLIC_STOREFRONT_API_VERSION: string
     PUBLIC_STORE_DOMAIN: string
     PUBLIC_STOREFRONT_ID: string
+    PUBLIC_SUPABASE_URL: string
+    PUBLIC_SUPABASE_ANON_KEY: string
   }
 }
 
@@ -29,6 +32,7 @@ declare global {
  */
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
+    supabase: SupabaseClient
     session: HydrogenSession
     storefront: Storefront
     env: Env

@@ -1,10 +1,12 @@
 // Virtual entry point for the app
 import * as remixBuild from '@remix-run/dev/server-build'
 import {createStorefrontClient, storefrontRedirect} from '@shopify/hydrogen'
+import {createClient} from '@supabase/supabase-js'
 import {
   createRequestHandler,
   getBuyerIp,
   createCookieSessionStorage,
+  CookieSerializeOptions,
   type SessionStorage,
   type Session,
 } from '@shopify/remix-oxygen'
@@ -33,6 +35,14 @@ export default {
       ])
 
       /**
+       * Create supabase client.
+       */
+      const supabase = createClient(
+        env.PUBLIC_SUPABASE_URL,
+        env.PUBLIC_SUPABASE_ANON_KEY,
+      )
+
+      /**
        * Create Hydrogen's Storefront client.
        */
       const {storefront} = createStorefrontClient({
@@ -55,7 +65,7 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => ({session, storefront, env}),
+        getLoadContext: () => ({session, supabase, storefront, env}),
       })
 
       const response = await handleRequest(request)
@@ -125,7 +135,7 @@ export class HydrogenSession {
     this.session.set(key, value)
   }
 
-  commit() {
-    return this.sessionStorage.commitSession(this.session)
+  commit(options: CookieSerializeOptions) {
+    return this.sessionStorage.commitSession(this.session, options)
   }
 }

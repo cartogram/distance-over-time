@@ -1,8 +1,9 @@
-import type {Shop} from '@shopify/hydrogen/storefront-api-types'
-import {type LoaderArgs, defer} from '@shopify/remix-oxygen'
-import {useLoaderData} from '@remix-run/react'
+import {useLoaderData, Link} from '@remix-run/react'
+import {LoaderArgs, defer} from '@shopify/remix-oxygen'
 import {Header} from '~/components'
-import {Main, Text, Button} from '@cartogram/ui'
+import {Main, Text, Box, Button} from '@cartogram/ui'
+import {useOptionalUser} from '~/lib/user'
+import {Shop} from '@shopify/hydrogen/storefront-api-types'
 
 export async function loader({context}: LoaderArgs) {
   const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
@@ -11,20 +12,54 @@ export async function loader({context}: LoaderArgs) {
 }
 
 export default function Index() {
-  const {shop} = useLoaderData()
-  const {name, description, brand} = shop
+  const user = useOptionalUser()
+  const {
+    shop: {brand},
+  } = useLoaderData<{shop: Shop}>()
+
+  // console.log(user)
+
+  const signUpMarkup = (
+    <>
+      <Box>
+        <Text>{brand?.slogan}</Text>
+      </Box>
+      <Box>
+        <Text>{brand?.shortDescription}</Text>
+      </Box>
+      <Box>
+        <Button>
+          <Link to="/join">Join</Link>
+        </Button>
+      </Box>
+    </>
+  )
+
+  const signedInMarkup = (
+    <>
+      <Box>
+        <pre>{JSON.stringify(user, null, 2)}</pre>{' '}
+      </Box>
+      <Box>
+        <form method="post" action="/logout">
+          <Button type="submit">Log out</Button>
+        </form>
+      </Box>
+    </>
+  )
+
   return (
     <Main>
       <Header />
-      <Text>{brand.slogan}</Text>
-      <Text>{brand.shortDescription}</Text>
-      <Button href="mailto:distanceovertime@gmail.com">Get in touch</Button>
+      {user && signedInMarkup}
+      {!user && signUpMarkup}
     </Main>
   )
 }
 
-export function ErrorBoundary({error}) {
+export function ErrorBoundary({error}: {error: Error}) {
   console.log(error)
+
   return (
     <Main>
       <h1>Application error.</h1>

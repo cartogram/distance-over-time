@@ -19,11 +19,8 @@ jobs:
       - name: Setup node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
-          check-latest: true
           node-version-file: '.nvmrc'
           cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
         id: 'install-dependencies'

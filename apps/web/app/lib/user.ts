@@ -20,7 +20,6 @@ export function isUser(user: User) {
 export function useOptionalUser() {
   const data = useMatchesData('root')
 
-  console.log(data.user)
   if (!data || !isUser(data.user)) {
     return undefined
   }

@@ -1,5 +1,3 @@
-import type {LoaderArgs, MetaFunction} from '@shopify/remix-oxygen'
-import {defer} from '@shopify/remix-oxygen'
 import {
   Links,
   LiveReload,
@@ -11,7 +9,7 @@ import {
 import styles from '~/styles.css'
 import ui from '@cartogram/ui/index.css'
 import type {Shop} from '@shopify/hydrogen/storefront-api-types'
-import {type LoaderArgs, defer} from '@shopify/remix-oxygen'
+import {type LoaderArgs, type MetaFunction, defer} from '@shopify/remix-oxygen'
 
 export const links = () => [
   {

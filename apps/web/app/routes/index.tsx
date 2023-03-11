@@ -17,12 +17,10 @@ export default function Index() {
     shop: {brand},
   } = useLoaderData<{shop: Shop}>()
 
-  console.log(user)
+  // console.log(user)
 
-  return (
-    <Main>
-      <Header />
-      <pre>{JSON.stringify(user, null, 2)}</pre>
+  const signUpMarkup = (
+    <>
       <Box>
         <Text>{brand?.slogan}</Text>
       </Box>
@@ -34,6 +32,27 @@ export default function Index() {
           <Link to="/join">Join</Link>
         </Button>
       </Box>
+    </>
+  )
+
+  const signedInMarkup = (
+    <>
+      <Box>
+        <pre>{JSON.stringify(user, null, 2)}</pre>{' '}
+      </Box>
+      <Box>
+        <form method="post" action="/logout">
+          <Button type="submit">Log out</Button>
+        </form>
+      </Box>
+    </>
+  )
+
+  return (
+    <Main>
+      <Header />
+      {user && signedInMarkup}
+      {!user && signUpMarkup}
     </Main>
   )
 }

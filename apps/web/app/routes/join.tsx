@@ -29,9 +29,10 @@ const schema = z.object({
   redirectTo: z.string().optional(),
 })
 
-export async function loader({request}: LoaderArgs) {
-  // const userId = await getUserId(request)
-  // if (userId) return redirect('/')
+export async function loader({context}: LoaderArgs) {
+  const {session} = context
+  const userId = await session.get('userId')
+  if (userId) return redirect('/')
   return json({})
 }
 
@@ -69,14 +70,20 @@ export const action: ActionFunction = async ({request, context}) => {
       },
     })
   } catch (error: unknown) {
-    const errors = (error as ZodError)?.errors.reduce((acc, error) => {
-      acc[error.path[0]] = error.message
+    if (error instanceof ZodError) {
+      return json({
+        errors: error.errors.reduce((acc, error) => {
+          acc[error.path[0]] = error.message
 
-      return acc
-    }, {} as Record<string, string>)
+          return acc
+        }, {} as Record<string, string>),
+      })
+    }
 
     return json({
-      errors,
+      errors: {
+        email: 'Unable to create user',
+      },
     })
   }
 }

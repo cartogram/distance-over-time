@@ -6,6 +6,7 @@ import {
   createRequestHandler,
   getBuyerIp,
   createCookieSessionStorage,
+  CookieSerializeOptions,
   type SessionStorage,
   type Session,
 } from '@shopify/remix-oxygen'
@@ -134,7 +135,7 @@ export class HydrogenSession {
     this.session.set(key, value)
   }
 
-  commit() {
-    return this.sessionStorage.commitSession(this.session)
+  commit(options: CookieSerializeOptions) {
+    return this.sessionStorage.commitSession(this.session, options)
   }
 }

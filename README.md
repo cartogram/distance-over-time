@@ -1,40 +1,21 @@
-# Turborepo kitchen sink starter
+# Distance over time monorepo
 
-This is an official starter Turborepo with multiple meta-frameworks all working in harmony and sharing packages.
+## Table of contents
 
-## What's inside?
+- Overview
+- Getting started
+- Apps
+- Packages
+- Linting
+- Testing
+- Deployment
 
-This Turborepo includes the following packages and apps:
+## Apps
 
-### Apps and Packages
+### `/web`
 
-- `api`: an [Express](https://expressjs.com/) server
-- `storefront`: a [Next.js](https://nextjs.org) app
-- `admin`: a [Vite](https://vitejs.dev/) single page app
-- `blog`: a [Remix](https://remix.run/) blog
-- `logger`: isomorphic logger (a small wrapper around console.log)
-- `ui`: a dummy React UI library (which contains a single `<CounterButton>` component)
-- `scripts`: Jest and ESLint configurations
-- `tsconfig`: tsconfig.json;s used throughout the monorepo
+This is the web app and marketing site.
 
-Each package and app is 100% [TypeScript](https://www.typescriptlang.org/).
+## Private notes
 
-### Utilities
-
-This Turborepo has some additional tools already setup for you:
-
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Jest](https://jestjs.io) test runner for all things JavaScript
-- [Prettier](https://prettier.io) for code formatting
-
-## Using this example
-
-Run the following command:
-
-```sh
-npx degit vercel/turborepo/examples/kitchen-sink kitchen-sink
-cd kitchen-sink
-yarn install
-git init . && git add . && git commit -m "Init"
-```
+- Hydrogen doesn't support flat routes I think,

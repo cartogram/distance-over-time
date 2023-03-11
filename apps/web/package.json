@@ -1,38 +1,40 @@
 {
-  "name": "web",
+  "name": "distance-over-time",
   "version": "0.0.0",
   "scripts": {
     "build": "remix build",
     "deploy": "wrangler publish",
-    "dev:remix": "remix watch",
-    "dev:miniflare": "cross-env NODE_ENV=development miniflare ./build/index.js --watch",
-    "dev": "remix build && run-p \"dev:*\"",
+    "dev": "shopify hydrogen dev",
     "start": "cross-env NODE_ENV=production miniflare ./build/index.js",
     "lint": "eslint ./app/**/*.ts* --fix"
   },
   "dependencies": {
-    "@remix-run/cloudflare": "^1.7.4",
-    "@remix-run/cloudflare-workers": "^1.7.4",
-    "@remix-run/react": "^1.7.4",
+    "@cartogram/ui": "*",
+    "@remix-run/react": "1.12.0",
+    "@shopify/cli": "3.29.0",
+    "@shopify/cli-hydrogen": "^4.0.8",
+    "@shopify/css-utilities": "^3.1.0",
+    "@shopify/hydrogen": "^2023.1.5",
+    "@shopify/remix-oxygen": "^1.0.3",
     "cross-env": "^7.0.3",
     "react": "^18.0.2",
-    "react-dom": "^18.0.2",
-    "@cartogram/ui": "*"
+    "react-dom": "^18.0.2"
   },
   "prettier": "@cartogram/prettier-config",
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.18.0",
-    "@remix-run/dev": "^1.7.4",
-    "@cartogram/tsconfig": "*",
-    "@cartogram/prettier-config": "*",
     "@cartogram/eslint-config": "*",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.06",
-    "eslint": "^8.23.1",
-    "miniflare": "2.10.0",
-    "npm-run-all": "^4.1.5",
-    "wrangler": "^2.1.13",
-    "typescript": "^4.8.3"
+    "@cartogram/prettier-config": "*",
+    "@cartogram/tsconfig": "*",
+    "@remix-run/dev": "1.12.0",
+    "@shopify/oxygen-workers-types": "^3.17.2",
+    "@shopify/prettier-config": "^1.1.2",
+    "@types/eslint": "^8.4.10",
+    "@types/react": "^18.0.20",
+    "@types/react-dom": "^18.0.6",
+    "eslint": "^8.20.0",
+    "eslint-plugin-hydrogen": "0.12.2",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.5"
   },
   "eslintConfig": {
     "extends": [

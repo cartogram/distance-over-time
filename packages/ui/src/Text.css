@@ -1,2 +1,7 @@
 .Text {
+  font-weight: 500;
+  font-size: 0.8em;
+  line-height: 1.6;
+  font-family: var(--font-family-mono);
+  padding: 0 0 2em;
 }

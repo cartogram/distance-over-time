@@ -4,8 +4,11 @@
   border: none;
   cursor: pointer;
   color: inherit;
-  font-size: 2em;
   font-family: inherit;
-  position: absolute;
-  bottom: 2em;
+  font-weight: 500;
+  font-size: 0.8em;
+  line-height: 1.6;
+  font-family: var(--font-family-mono);
+  padding: 0;
+  text-decoration: underline;
 }

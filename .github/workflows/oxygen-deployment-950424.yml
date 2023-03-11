@@ -2,7 +2,7 @@
 #! oxygen_storefront_id: 950424
 
 name: Storefront 950424
-on: [push]
+on: [push, workflow_dispatch]
 
 permissions:
   contents: read
@@ -21,28 +21,28 @@ jobs:
         with:
           node-version: '16'
           check-latest: true
-
-      - name: Get yarn cache directory
-        id: yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-
-      - uses: actions/cache@v3
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
 
       - name: Install dependencies
         id: 'install-dependencies'
-        run: yarn
+        run: npm ci
+
+      - name: Build packages
+        id: 'run-build'
+        run: |
+          CI=true npm run build:pkg
 
       - name: Build and Publish to Oxygen
         id: deploy
         uses: shopify/oxygenctl-action@v4
         with:
+          path: ./apps/web
           oxygen_deployment_token: ${{ secrets.OXYGEN_DEPLOYMENT_TOKEN_950424 }}
-          build_command: "HYDROGEN_ASSET_BASE_URL=$OXYGEN_ASSET_BASE_URL yarn build"
+          build_command: 'HYDROGEN_ASSET_BASE_URL=$OXYGEN_ASSET_BASE_URL yarn build'
+          commit_message: ${{ github.event.head_commit.message || 'Manual deployment' }}
+          commit_timestamp: ${{ github.event.head_commit.timestamp || github.event.repository.updated_at }}
 
       # Create GitHub Deployment
       - name: Create GitHub Deployment

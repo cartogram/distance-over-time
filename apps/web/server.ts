@@ -218,11 +218,7 @@ export class CustomerContext {
       this.accessToken =
         data.customerAccessTokenCreate.customerAccessToken.accessToken
 
-      redirect(options?.successRedirect ?? '/', {
-        headers: {
-          'Set-Cookie': await this.session.commit(),
-        },
-      })
+      console.log('authenticate success', this.accessToken)
 
       return {success: true}
     }
@@ -300,13 +296,19 @@ export class CustomerContext {
   }
 
   async recover(customer: {email: string}): Promise<AuthenticationResult> {
+    console.log('recover', customer)
+
     const data = await this.storefront.mutate<{
       customerRecover: CustomerRecoverPayload
     }>(this.CUSTOMER_RECOVER_MUTATION, {
-      variables: {
-        input: customer,
-      },
+      variables: customer,
     })
+
+    if (data?.customerRecover?.customerUserErrors?.length === 0) {
+      return {
+        success: true,
+      }
+    }
 
     return {
       success: false,
@@ -323,9 +325,14 @@ export class CustomerContext {
     }>(this.CUSTOMER_RESET_MUTATION, {
       variables: {
         id: `gid://shopify/Customer/${customer.id}`,
-        input: customer,
+        input: {
+          password: customer.password,
+          resetToken: customer.resetToken,
+        },
       },
     })
+
+    console.log(data.customerReset)
 
     if (
       data.customerReset?.customerAccessToken?.accessToken &&

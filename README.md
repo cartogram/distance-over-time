@@ -21,9 +21,3 @@ This is the web app and marketing site.
 - Hydrogen's magic stuff doesn't support flat routes I think,
 
 ## TODOs
-
-- Get strava runs
-- Route domain over
-
-- Mostly undo the last commit and look into what the
-- supabase auth library is doing.

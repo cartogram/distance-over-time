@@ -55,13 +55,16 @@ export const action: ActionFunction = async ({request, context}) => {
       remember: Boolean(formData.get('remember')),
     })
 
-    return await customer.authenticate(
-      {
-        email,
-        password,
+    await customer.authenticate({
+      email,
+      password,
+    })
+
+    return redirect('/dashboard', {
+      headers: {
+        'Set-Cookie': await session.commit(),
       },
-      {successRedirect: redirectTo},
-    )
+    })
   } catch (error: unknown) {
     console.log(error)
 
@@ -148,6 +151,7 @@ export default function Join() {
             ref={passwordRef}
           />
         </Box>
+
         <Box>
           <input
             className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
@@ -175,6 +179,12 @@ export default function Join() {
             </Link>
           </Button>
         </Text>
+
+        <Box>
+          <Link className="text-blue-500 underline" to="/recover">
+            Forgot
+          </Link>
+        </Box>
       </Form>
     </Main>
   )

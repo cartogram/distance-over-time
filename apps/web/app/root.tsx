@@ -6,7 +6,6 @@ import {
   Scripts,
   ScrollRestoration,
 } from '@remix-run/react'
-import {createServerClient} from '@supabase/auth-helpers-remix'
 import styles from '~/styles.css'
 import ui from '@cartogram/ui/index.css'
 import type {Shop} from '@shopify/hydrogen/storefront-api-types'
@@ -26,17 +25,10 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader({context, request}: LoaderArgs) {
-  const {supabase} = context
   const [{shop}, userId] = await Promise.all([
     context.storefront.query<{shop: Shop}>(QUERY),
     context.session.get('userId'),
   ])
-
-  // const {data, error} = await supabase
-  //   .from('profiles')
-  //   .select('email, id, athlete')
-  //   .eq('id', userId)
-  //   .single()
 
   return defer({shop})
 }

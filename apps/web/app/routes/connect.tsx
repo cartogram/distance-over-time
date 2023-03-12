@@ -45,8 +45,6 @@ export async function loader({context, request}: LoaderArgs) {
       athlete: Record<string, unknown>
     }>()
 
-    const session = await context.supabase.auth.getSession()
-
     console.log('access_token', access_token)
     console.log('refresh_token', refresh_token)
 
@@ -54,8 +52,6 @@ export async function loader({context, request}: LoaderArgs) {
     context.session.set('stravaRefreshToken', refresh_token)
 
     // console.log(athlete)
-
-    const res = await context.supabase.auth.updateUser({data: {athlete}})
 
     console.log(session)
     console.log(res)

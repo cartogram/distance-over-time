@@ -23,13 +23,6 @@ interface ActionData {
   }
 }
 
-const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(6),
-  redirectTo: z.string().optional(),
-  remember: z.boolean().optional(),
-})
-
 export async function loader({context}: LoaderArgs) {
   const {customer} = context
 
@@ -40,31 +33,26 @@ export async function loader({context}: LoaderArgs) {
 
 export const action: ActionFunction = async ({request, context}) => {
   const formData = await request.formData()
-  const {customer, session} = context
+  const {session, customer} = context
 
   try {
     const {
       email,
       password,
       redirectTo = new URL(request.url).pathname,
-      remember,
     } = schema.parse({
       email: formData.get('email'),
       password: formData.get('password'),
       redirectTo: formData.get('redirectTo'),
-      remember: Boolean(formData.get('remember')),
     })
 
-    return await customer.authenticate(
-      {
-        email,
-        password,
-      },
-      {successRedirect: redirectTo},
-    )
-  } catch (error: unknown) {
-    console.log(error)
+    await customer.create({
+      email,
+      password,
+    })
 
+    return null
+  } catch (error: unknown) {
     if (error instanceof ZodError) {
       return json({
         errors: error.errors.reduce((acc, error) => {
@@ -75,9 +63,11 @@ export const action: ActionFunction = async ({request, context}) => {
       })
     }
 
+    console.log(error)
+
     return json({
       errors: {
-        email: 'Unable to authenticate user',
+        email: 'Unable to create user',
       },
     })
   }
@@ -103,7 +93,7 @@ export default function Join() {
     <Main>
       <Header />
       <Box>
-        <Text>Log in</Text>
+        <Text>Join</Text>
       </Box>
       <Form method="post" noValidate>
         <Box>
@@ -149,29 +139,19 @@ export default function Join() {
           />
         </Box>
         <Box>
-          <input
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            id="remember"
-            name="remember"
-            type="checkbox"
-          />
-          <label
-            className="ml-2 block text-sm text-gray-900"
-            htmlFor="remember"
-          >
-            <Text as="span">Remember me</Text>
-          </label>
+          <Button type="submit">Create Account</Button>
         </Box>
-        <Box>
-          <Button type="submit">Log in</Button>
-        </Box>
-
         <input type="hidden" name="redirectTo" value={redirectTo} />
         <Text>
-          Don`t have an account?{' '}
+          Already have an account?{' '}
           <Button>
-            <Link className="text-blue-500 underline" to={{pathname: '/join'}}>
-              Join
+            <Link
+              to={{
+                pathname: '/login',
+                search: searchParams.toString(),
+              }}
+            >
+              Log in
             </Link>
           </Button>
         </Text>

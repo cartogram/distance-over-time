@@ -24,10 +24,7 @@ interface ActionData {
 }
 
 const schema = z.object({
-  email: z.string().email(),
   password: z.string().min(6),
-  redirectTo: z.string().optional(),
-  remember: z.boolean().optional(),
 })
 
 export async function loader({context}: LoaderArgs) {
@@ -38,30 +35,41 @@ export async function loader({context}: LoaderArgs) {
   return json({})
 }
 
-export const action: ActionFunction = async ({request, context}) => {
+export const action: ActionFunction = async ({
+  request,
+  context,
+  params: {id, resetToken},
+}) => {
   const formData = await request.formData()
   const {customer, session} = context
 
+  console.log('id', id)
+  console.log('resetToken', resetToken)
+
+  if (!id || !resetToken) {
+    return json({
+      errors: {
+        email: 'Missing token or id',
+      },
+    })
+  }
+
   try {
-    const {
-      email,
-      password,
-      redirectTo = new URL(request.url).pathname,
-      remember,
-    } = schema.parse({
-      email: formData.get('email'),
+    const {password} = schema.parse({
       password: formData.get('password'),
-      redirectTo: formData.get('redirectTo'),
-      remember: Boolean(formData.get('remember')),
     })
 
-    return await customer.authenticate(
-      {
-        email,
-        password,
+    const result = await customer.reset({
+      password,
+      id,
+      resetToken,
+    })
+
+    return redirect('/dashboard', {
+      headers: {
+        'Set-Cookie': await session.commit(),
       },
-      {successRedirect: redirectTo},
-    )
+    })
   } catch (error: unknown) {
     console.log(error)
 
@@ -103,30 +111,9 @@ export default function Join() {
     <Main>
       <Header />
       <Box>
-        <Text>Log in</Text>
+        <Text>Reset password</Text>
       </Box>
       <Form method="post" noValidate>
-        <Box>
-          <label htmlFor="email">
-            <Text block as="span">
-              Email Address
-            </Text>
-            {actionData?.errors?.email && (
-              <Text block as="em" id="email-error">
-                {actionData?.errors?.email}
-              </Text>
-            )}
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            required
-            aria-invalid={actionData?.errors?.email ? true : undefined}
-            aria-describedby="email-error"
-            ref={emailRef}
-          />
-        </Box>
         <Box>
           <label htmlFor="password">
             <Text block as="em">

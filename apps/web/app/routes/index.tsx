@@ -6,7 +6,9 @@ import {useOptionalUser} from '~/lib/user'
 import {Shop} from '@shopify/hydrogen/storefront-api-types'
 
 export async function loader({context}: LoaderArgs) {
-  const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
+  const [{shop}] = await Promise.all([
+    context.storefront.query<{shop: Shop}>(QUERY),
+  ])
 
   return defer({shop})
 }
@@ -41,6 +43,11 @@ export default function Index() {
         <pre>{JSON.stringify(user, null, 2)}</pre>{' '}
       </Box>
       <Box>
+        <form method="post" action="/connect">
+          <Button type="submit">Connect</Button>
+        </form>
+      </Box>
+      <Box>
         <form method="post" action="/logout">
           <Button type="submit">Log out</Button>
         </form>
@@ -51,8 +58,8 @@ export default function Index() {
   return (
     <Main>
       <Header />
-      {user && signedInMarkup}
-      {!user && signUpMarkup}
+      {signedInMarkup}
+      {signUpMarkup}
     </Main>
   )
 }

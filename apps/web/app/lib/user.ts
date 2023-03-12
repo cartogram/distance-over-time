@@ -1,8 +1,6 @@
 import {useMemo} from 'react'
 import {useMatches} from '@remix-run/react'
 
-export type User = {id: string; email: string}
-
 export function useMatchesData(id: string) {
   const matchingRoutes = useMatches()
   const route = useMemo(
@@ -13,7 +11,7 @@ export function useMatchesData(id: string) {
   return route?.data
 }
 
-export function isUser(user: User) {
+export function isUser(user: unknown) {
   return user && typeof user === 'object'
 }
 

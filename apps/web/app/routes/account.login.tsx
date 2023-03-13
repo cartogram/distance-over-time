@@ -174,7 +174,10 @@ export default function Join() {
         <Text>
           Don`t have an account?{' '}
           <Button>
-            <Link className="text-blue-500 underline" to={{pathname: '/join'}}>
+            <Link
+              className="text-blue-500 underline"
+              to={{pathname: '/account/join'}}
+            >
               Join
             </Link>
           </Button>

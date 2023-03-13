@@ -153,7 +153,7 @@ export default function Join() {
           <Button>
             <Link
               to={{
-                pathname: '/login',
+                pathname: '/account/login',
                 search: searchParams.toString(),
               }}
             >

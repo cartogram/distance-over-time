@@ -2,22 +2,19 @@ import {useLoaderData, Link} from '@remix-run/react'
 import {LoaderArgs, defer} from '@shopify/remix-oxygen'
 import {Header} from '~/components'
 import {Main, Text, Box, Button} from '@cartogram/ui'
-import {useOptionalUser} from '~/lib/user'
 import {Shop} from '@shopify/hydrogen/storefront-api-types'
 
 export async function loader({context}: LoaderArgs) {
-  const [{shop}] = await Promise.all([
-    context.storefront.query<{shop: Shop}>(QUERY),
-  ])
+  const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
 
-  return defer({shop})
+  return defer({shop, customer: context.customer.details})
 }
 
 export default function Index() {
-  const user = useOptionalUser()
   const {
+    customer,
     shop: {brand},
-  } = useLoaderData<{shop: Shop}>()
+  } = useLoaderData()
 
   // console.log(user)
 
@@ -31,7 +28,11 @@ export default function Index() {
       </Box>
       <Box>
         <Button>
-          <Link to="/join">Join</Link>
+          <Link to="/account/join">Join</Link>
+        </Button>{' '}
+        |{' '}
+        <Button>
+          <Link to="/account/login">Log in</Link>
         </Button>
       </Box>
     </>
@@ -40,7 +41,7 @@ export default function Index() {
   const signedInMarkup = (
     <>
       <Box>
-        <pre>{JSON.stringify(user, null, 2)}</pre>{' '}
+        <pre>{JSON.stringify(customer, null, 2)}</pre>{' '}
       </Box>
       <Box>
         <form method="post" action="/connect">
@@ -48,7 +49,7 @@ export default function Index() {
         </form>
       </Box>
       <Box>
-        <form method="post" action="/logout">
+        <form method="post" action="/account/logout">
           <Button type="submit">Log out</Button>
         </form>
       </Box>

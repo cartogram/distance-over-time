@@ -25,12 +25,9 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader({context, request}: LoaderArgs) {
-  const [{shop}, userId] = await Promise.all([
-    context.storefront.query<{shop: Shop}>(QUERY),
-    context.session.get('userId'),
-  ])
+  const shop = await context.storefront.query<{shop: Shop}>(QUERY)
 
-  return defer({shop})
+  return defer({shop, customer: context.customer.details})
 }
 
 export default function App() {

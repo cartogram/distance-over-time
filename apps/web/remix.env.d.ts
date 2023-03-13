@@ -3,8 +3,7 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type {Storefront} from '@shopify/hydrogen'
-import type {HydrogenSession} from './server'
-import type {SupabaseClient} from '@supabase/supabase-js'
+import type {HydrogenSession, CustomerContext} from './server'
 
 declare global {
   /**
@@ -24,6 +23,8 @@ declare global {
     PUBLIC_STOREFRONT_ID: string
     PUBLIC_SUPABASE_URL: string
     PUBLIC_SUPABASE_ANON_KEY: string
+    STRAVA_CLIENT_ID: string
+    STRAVA_CLIENT_SECRET: string
   }
 }
 
@@ -32,7 +33,7 @@ declare global {
  */
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
-    supabase: SupabaseClient
+    customer: CustomerContext
     session: HydrogenSession
     storefront: Storefront
     env: Env

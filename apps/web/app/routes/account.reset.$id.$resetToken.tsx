@@ -24,62 +24,55 @@ interface ActionData {
 }
 
 const schema = z.object({
-  email: z.string().email(),
   password: z.string().min(6),
-  redirectTo: z.string().optional(),
-  remember: z.boolean().optional(),
 })
 
 export async function loader({context}: LoaderArgs) {
-  const {session} = context
-  const userId = await session.get('userId')
+  const {customer} = context
 
-  if (userId) return redirect('/')
+  if (customer.isAuthenticated) return redirect('/')
 
   return json({})
 }
 
-export const action: ActionFunction = async ({request, context}) => {
+export const action: ActionFunction = async ({
+  request,
+  context,
+  params: {id, resetToken},
+}) => {
   const formData = await request.formData()
-  const {session, supabase} = context
+  const {customer, session} = context
+
+  console.log('id', id)
+  console.log('resetToken', resetToken)
+
+  if (!id || !resetToken) {
+    return json({
+      errors: {
+        email: 'Missing token or id',
+      },
+    })
+  }
 
   try {
-    const {
-      email,
-      password,
-      redirectTo = new URL(request.url).pathname,
-      remember,
-    } = schema.parse({
-      email: formData.get('email'),
+    const {password} = schema.parse({
       password: formData.get('password'),
-      redirectTo: formData.get('redirectTo'),
-      remember: Boolean(formData.get('remember')),
     })
 
-    const {
-      data: {user},
-    } = await supabase.auth.signInWithPassword({
-      email,
+    const result = await customer.reset({
       password,
+      id,
+      resetToken,
     })
 
-    if (!user) {
-      throw new Error('Unable to create user')
-    }
-
-    session.set('userId', user.id)
-
-    return redirect(redirectTo!, {
+    return redirect('/dashboard', {
       headers: {
-        'Set-Cookie': await session.commit({
-          maxAge: remember
-            ? 60 * 60 * 24 * 7 // 7 days
-            : undefined,
-        }),
+        'Set-Cookie': await session.commit(),
       },
     })
   } catch (error: unknown) {
     console.log(error)
+
     if (error instanceof ZodError) {
       return json({
         errors: error.errors.reduce((acc, error) => {
@@ -92,7 +85,7 @@ export const action: ActionFunction = async ({request, context}) => {
 
     return json({
       errors: {
-        email: 'Unable to create user',
+        email: 'Unable to authenticate user',
       },
     })
   }
@@ -109,9 +102,7 @@ export default function Join() {
   useEffect(() => {
     if (actionData?.errors?.email) {
       emailRef?.current?.focus()
-    }
-
-    if (actionData?.errors?.password) {
+    } else if (actionData?.errors?.password) {
       passwordRef?.current?.focus()
     }
   }, [actionData])
@@ -120,30 +111,9 @@ export default function Join() {
     <Main>
       <Header />
       <Box>
-        <Text>Join</Text>
+        <Text>Reset password</Text>
       </Box>
       <Form method="post" noValidate>
-        <Box>
-          <label htmlFor="email">
-            <Text block as="span">
-              Email Address
-            </Text>
-            {actionData?.errors?.email && (
-              <Text block as="em" id="email-error">
-                {actionData?.errors?.email}
-              </Text>
-            )}
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            required
-            aria-invalid={actionData?.errors?.email ? true : undefined}
-            aria-describedby="email-error"
-            ref={emailRef}
-          />
-        </Box>
         <Box>
           <label htmlFor="password">
             <Text block as="em">
@@ -188,7 +158,7 @@ export default function Join() {
           Don`t have an account?{' '}
           <Button>
             <Link className="text-blue-500 underline" to={{pathname: '/join'}}>
-              Sign up
+              Join
             </Link>
           </Button>
         </Text>

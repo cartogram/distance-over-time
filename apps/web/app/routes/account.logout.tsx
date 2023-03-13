@@ -1,15 +1,9 @@
 import {redirect, type ActionFunction} from '@shopify/remix-oxygen'
 
 export const action: ActionFunction = async ({context}) => {
-  context.session.unset('userId')
+  const {customer} = context
 
-  console.log('Logging out')
-
-  return redirect('/', {
-    headers: {
-      'Set-Cookie': await context.session.commit(),
-    },
-  })
+  return customer.logout()
 }
 
 export async function loader() {

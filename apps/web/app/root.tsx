@@ -24,19 +24,10 @@ export const meta: MetaFunction = () => {
   return {title: 'New Remix App'}
 }
 
-export async function loader({context}: LoaderArgs) {
-  const [{shop}, userId] = await Promise.all([
-    context.storefront.query<{shop: Shop}>(QUERY),
-    context.session.get('userId'),
-  ])
+export async function loader({context, request}: LoaderArgs) {
+  const shop = await context.storefront.query<{shop: Shop}>(QUERY)
 
-  const {data, error} = await context.supabase
-    .from('profiles')
-    .select('email, id')
-    .eq('id', userId)
-    .single()
-
-  return defer({shop, user: data})
+  return defer({shop, customer: context.customer.details})
 }
 
 export default function App() {

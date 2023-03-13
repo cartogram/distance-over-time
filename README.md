@@ -18,4 +18,6 @@ This is the web app and marketing site.
 
 ## Private notes
 
-- Hydrogen doesn't support flat routes I think,
+- Hydrogen's magic stuff doesn't support flat routes I think,
+
+## TODOs

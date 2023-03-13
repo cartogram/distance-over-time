@@ -25,20 +25,21 @@ interface ActionData {
 
 const schema = z.object({
   email: z.string().email(),
-  password: z.string().min(6),
+  password: z.string(),
   redirectTo: z.string().optional(),
 })
 
 export async function loader({context}: LoaderArgs) {
-  const {session} = context
-  const userId = await session.get('userId')
-  if (userId) return redirect('/')
+  const {customer} = context
+
+  if (customer.isAuthenticated) return redirect('/')
+
   return json({})
 }
 
 export const action: ActionFunction = async ({request, context}) => {
   const formData = await request.formData()
-  const {session, supabase} = context
+  const {session, customer} = context
 
   try {
     const {
@@ -51,24 +52,12 @@ export const action: ActionFunction = async ({request, context}) => {
       redirectTo: formData.get('redirectTo'),
     })
 
-    const {
-      data: {user},
-    } = await supabase.auth.signUp({
+    await customer.create({
       email,
       password,
     })
 
-    if (!user) {
-      throw new Error('Unable to create user')
-    }
-
-    session.set('userId', user.id)
-
-    return redirect(redirectTo!, {
-      headers: {
-        'Set-Cookie': await session.commit(),
-      },
-    })
+    return null
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       return json({
@@ -79,6 +68,8 @@ export const action: ActionFunction = async ({request, context}) => {
         }, {} as Record<string, string>),
       })
     }
+
+    console.log(error)
 
     return json({
       errors: {
@@ -99,9 +90,7 @@ export default function Join() {
   useEffect(() => {
     if (actionData?.errors?.email) {
       emailRef?.current?.focus()
-    }
-
-    if (actionData?.errors?.password) {
+    } else if (actionData?.errors?.password) {
       passwordRef?.current?.focus()
     }
   }, [actionData])
@@ -164,7 +153,7 @@ export default function Join() {
           <Button>
             <Link
               to={{
-                pathname: '/login',
+                pathname: '/account/login',
                 search: searchParams.toString(),
               }}
             >

@@ -165,6 +165,18 @@ export class CustomerContext {
     private session: HydrogenSession,
   ) {}
 
+  get details(): Customer | null {
+    if (!this.isAuthenticated) {
+      return null
+    }
+
+    return this.session.get('customer')
+  }
+
+  set details(customer: Customer | null) {
+    this.session.set('customer', customer)
+  }
+
   get accessToken() {
     console.log('get accessToken', this.session.get('accessToken'))
     return this.session.get('accessToken')
@@ -188,6 +200,24 @@ export class CustomerContext {
         'Set-Cookie': await this.session.commit(),
       },
     })
+  }
+
+  async setCustomer() {
+    if (!this.isAuthenticated) {
+      return
+    }
+
+    const data = await this.storefront.query<{
+      customer: Customer
+    }>(this.CUSTOMER_QUERY, {
+      variables: {
+        customerAccessToken: this.accessToken,
+      },
+    })
+
+    if (data?.customer) {
+      this.details = data.customer
+    }
   }
 
   async authenticate(
@@ -217,8 +247,13 @@ export class CustomerContext {
     if (data?.customerAccessTokenCreate?.customerAccessToken?.accessToken) {
       this.accessToken =
         data.customerAccessTokenCreate.customerAccessToken.accessToken
+      await this.setCustomer()
 
-      console.log('authenticate success', this.accessToken)
+      console.log(
+        'authenticate success',
+        data.customerAccessTokenCreate,
+        this.accessToken,
+      )
 
       return {success: true}
     }
@@ -350,6 +385,49 @@ export class CustomerContext {
     }
   }
 
+  async addresses(): Promise<Customer | null> {
+    // TODO: implement
+    return Promise.resolve(null)
+  }
+
+  async orders(): Promise<Customer | null> {
+    // TODO: implement
+    return Promise.resolve(null)
+  }
+
+  private CUSTOMER_FRAGMENT = `#graphql
+    fragment Customer on Customer {
+      id
+      firstName
+      lastName
+      phone
+      email
+      defaultAddress {
+        id
+        formatted
+        firstName
+        lastName
+        company
+        address1
+        address2
+        country
+        province
+        city
+        zip
+        phone
+      }
+    }
+  `
+
+  private CUSTOMER_QUERY = `#graphql
+    ${this.CUSTOMER_FRAGMENT}
+    query Customer($customerAccessToken: String!) {
+      customer(customerAccessToken: $customerAccessToken) {
+        ...Customer
+      }
+    }
+  `
+
   private LOGIN_MUTATION = `#graphql
     mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
       customerAccessTokenCreate(input: $input) {
@@ -367,10 +445,11 @@ export class CustomerContext {
     `
 
   private CUSTOMER_CREATE_MUTATION = `#graphql
+    ${this.CUSTOMER_FRAGMENT}
     mutation customerCreate($input: CustomerCreateInput!) {
       customerCreate(input: $input) {
         customer {
-          id
+          ...Customer
         }
         customerUserErrors {
           code
@@ -382,12 +461,16 @@ export class CustomerContext {
     `
 
   private CUSTOMER_UPDATE_MUTATION = `#graphql
+    ${this.CUSTOMER_FRAGMENT}
     mutation customerUpdate($customerAccessToken: String!, $customer: CustomerUpdateInput!) {
       customerUpdate(customerAccessToken: $customerAccessToken, customer: $customer) {
         customerUserErrors {
           code
           field
           message
+        }
+        customer {
+          ...Customer
         }
       }
     }
@@ -406,6 +489,7 @@ export class CustomerContext {
   `
 
   private CUSTOMER_RESET_MUTATION = `#graphql
+    ${this.CUSTOMER_FRAGMENT}
     mutation customerReset($id: ID!, $input: CustomerResetInput!) {
       customerReset(id: $id, input: $input) {
         customerAccessToken {
@@ -418,10 +502,9 @@ export class CustomerContext {
           message
         }
         customer {
-          id
-          email
+          ...Customer
         }
       }
     }
-    `
+  `
 }

@@ -35,7 +35,7 @@ declare module '@shopify/remix-oxygen' {
     customer: Customer
     session: HydrogenSession
     storefront: Storefront
-    strava?: Strava
+    strava: Strava | null
     env: Env
   }
 }

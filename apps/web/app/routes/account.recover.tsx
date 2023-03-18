@@ -6,9 +6,8 @@ import type {
 } from '@shopify/remix-oxygen'
 import {json, redirect} from '@shopify/remix-oxygen'
 import {Form, Link, useActionData, useSearchParams} from '@remix-run/react'
-import {Main, Text, Box, Button} from '@cartogram/ui'
-import {Header} from '~/components'
-import {z, ZodError} from 'zod'
+import {Main, Text, Box, Button, Section} from '@cartogram/ui'
+import {z} from 'zod'
 
 export const meta: MetaFunction = () => {
   return {
@@ -39,35 +38,15 @@ export const action: ActionFunction = async ({request, context}) => {
   const formData = await request.formData()
   const {customer, session} = context
 
-  try {
-    const {email} = schema.parse({
-      email: formData.get('email'),
-    })
+  const {email} = schema.parse({
+    email: formData.get('email'),
+  })
 
-    const {status, headers} = await customer.recover({
-      email,
-    })
+  const {status, headers} = await customer.recover({
+    email,
+  })
 
-    return redirect('/account/reset', {status, headers})
-  } catch (error: unknown) {
-    console.log(error)
-
-    if (error instanceof ZodError) {
-      return json({
-        errors: error.errors.reduce((acc, error) => {
-          acc[error.path[0]] = error.message
-
-          return acc
-        }, {} as Record<string, string>),
-      })
-    }
-
-    return json({
-      errors: {
-        email: 'Unable to send recover email',
-      },
-    })
-  }
+  return redirect('/account/reset', {status, headers})
 }
 
 export default function Join() {
@@ -82,40 +61,41 @@ export default function Join() {
 
   return (
     <Main>
-      <Header />
-      <Box>
-        <Text>Recover password</Text>
-      </Box>
-      <Form method="post" noValidate>
+      <Section>
         <Box>
-          <label htmlFor="password">
-            <Text block as="em">
-              Email
-            </Text>
-            {actionData?.errors?.email && (
-              <Text block as="span" id="email-error">
-                {actionData?.errors?.email}
+          <Text>Recover password</Text>
+        </Box>
+        <Form method="post" noValidate>
+          <Box>
+            <label htmlFor="password">
+              <Text block as="em">
+                Email
               </Text>
-            )}
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            required
-            aria-invalid={actionData?.errors?.email ? true : undefined}
-            aria-describedby="email-error"
-            ref={emailRef}
-          />
-        </Box>
-        <Box>
-          <Button type="submit">Send recovery email</Button>
-        </Box>
+              {actionData?.errors?.email && (
+                <Text block as="span" id="email-error">
+                  {actionData?.errors?.email}
+                </Text>
+              )}
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              aria-invalid={actionData?.errors?.email ? true : undefined}
+              aria-describedby="email-error"
+              ref={emailRef}
+            />
+          </Box>
+          <Box>
+            <Button type="submit">Send recovery email</Button>
+          </Box>
 
-        <Button>
-          <Link to={{pathname: '/account/join'}}>Back to login</Link>
-        </Button>
-      </Form>
+          <Button>
+            <Link to={{pathname: '/account/join'}}>Back to login</Link>
+          </Button>
+        </Form>
+      </Section>
     </Main>
   )
 }

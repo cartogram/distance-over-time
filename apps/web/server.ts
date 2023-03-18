@@ -76,11 +76,15 @@ export default {
         {},
       )
 
-      // const strava = new Strava({
-      //   client_id: env.PUBLIC_STRAVA_CLIENT_ID,
-      //   client_secret: env.STRAVA_CLIENT_SECRET,
-      //   refresh_token: 'def',
-      // })
+      let strava: Strava | null = null
+      if (session.get('strava_refresh_token')) {
+        console.log('init strava')
+        strava = new Strava({
+          client_id: env.PUBLIC_STRAVA_CLIENT_ID,
+          client_secret: env.STRAVA_CLIENT_SECRET,
+          refresh_token: session.get('strava_refresh_token'),
+        })
+      }
 
       /**
        * Create a Hydrogen Strava client.
@@ -114,7 +118,7 @@ export default {
       const handleRequest = createRequestHandler({
         build: remixBuild,
         mode: process.env.NODE_ENV,
-        getLoadContext: () => ({session, customer, storefront, env}),
+        getLoadContext: () => ({session, customer, strava, storefront, env}),
       })
 
       const response = await handleRequest(request)

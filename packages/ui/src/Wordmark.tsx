@@ -3,7 +3,7 @@ import './Wordmark.css'
 export function Wordmark() {
   return (
     <>
-      <span className="Wordmark">Distance over time</span>
+      <span className="Wordmark">Distance Over Time</span>
     </>
   )
 }

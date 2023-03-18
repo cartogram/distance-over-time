@@ -1,8 +1,9 @@
 .Text {
-  font-weight: 500;
-  font-size: 1em;
-  line-height: 1.6;
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-sans);
+  width: 100%;
+  font-weight: normal;
+  display: block;
+  font-size: var(--ft-size-body);
 }
 
 .block {
@@ -51,83 +52,12 @@
   color: var(--p-text-on-dark);
 }
 
-.headingXs {
-  font-size: var(--p-font-size-75);
-  line-height: var(--p-font-line-height-1);
-  font-weight: var(--p-font-weight-semibold);
+.small {
+  font-size: var(--ft-size-small);
 }
 
-.headingSm {
-  font-size: var(--p-font-size-100);
-  line-height: var(--p-font-line-height-2);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.headingMd {
-  font-size: var(--p-font-size-200);
-  line-height: var(--p-font-line-height-3);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.headingLg {
-  font-size: var(--p-font-size-200);
-  line-height: var(--p-font-line-height-2);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.headingXl {
-  font-size: var(--p-font-size-300);
-  line-height: var(--p-font-line-height-3);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.heading2xl {
-  font-size: var(--p-font-size-300);
-  line-height: var(--p-font-line-height-3);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.heading3xl {
-  font-size: var(--p-font-size-400);
-  line-height: var(--p-font-line-height-4);
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.heading4xl {
-  font-size: var(--p-font-size-600);
-  line-height: var(--p-font-line-height-6);
-  font-weight: var(--p-font-weight-bold);
-}
-
-.bodySm {
-  font-size: var(--p-font-size-75);
-  line-height: var(--p-font-line-height-1);
-}
-
-.bodyMd {
-  font-size: var(--p-font-size-100);
-  line-height: var(--p-font-line-height-2);
-}
-
-.bodyLg {
-  font-size: var(--p-font-size-200);
-  line-height: var(--p-font-line-height-2);
-}
-
-.regular {
-  font-weight: var(--p-font-weight-regular);
-}
-
-.medium {
-  font-weight: var(--p-font-weight-medium);
-}
-
-.semibold {
-  font-weight: var(--p-font-weight-semibold);
-}
-
-.bold {
-  font-weight: var(--p-font-weight-bold);
+.large {
+  font-size: var(--ft-size-large);
 }
 
 .break {

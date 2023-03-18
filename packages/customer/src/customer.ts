@@ -50,14 +50,15 @@ export class Customer {
   constructor(
     private storefront: Storefront,
     private storage: TokenStorage,
-    options: CustomerOptions,
+    options?: CustomerOptions,
   ) {
     log('Creating customer client')
-    this.customerFragment = options.customerFragment || customerFragment
+    this.customerFragment = options?.customerFragment || customerFragment
   }
 
   get token() {
     const token = this.storage.get('token')
+
     log('Getting token', token)
 
     return token

@@ -1,22 +1,35 @@
-import {Link} from '@remix-run/react'
-import {Wordmark} from '@cartogram/ui'
+import {Wordmark, Text} from '@cartogram/ui'
+import {Link} from '~/components'
 
 interface MastProps {
-  links?: {content: string; href: string}[]
+  nav?: {content: string; href: string}[]
 }
 
-export function Header({links = []}: MastProps) {
+export function Header({
+  nav = [],
+  children,
+}: React.PropsWithChildren<MastProps>) {
   return (
-    <>
-      <Wordmark />
+    <div className="Header">
+      <div className="Header__logo">
+        <Link to="/">
+          <Text as="span" size="large">
+            Distance Over Time
+          </Text>
+        </Link>
+      </div>
 
-      <div className="Nav">
-        {links.map((link) => (
-          <Link key={link.href} className="Link" to={link.href}>
-            {link.content}
+      <div className="Header__nav">
+        {nav.map((link, index) => (
+          <Link key={link.href} to={link.href}>
+            <Text as="span" size="large">
+              {link.content}
+            </Text>
           </Link>
         ))}
       </div>
-    </>
+
+      <div className="text-align-right">{children}</div>
+    </div>
   )
 }

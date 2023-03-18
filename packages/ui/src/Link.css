@@ -1,4 +1,17 @@
 .Link {
-  color: red;
+  font-weight: 400;
+  line-height: 1.6;
+  font-family: var(--font-family-sans);
+  padding: 0;
+  color: var(--color-dark);
+  text-decoration: none;
+}
+
+.Link:hover,
+.Link:focus {
+  text-decoration: underline;
+}
+
+.unstyled {
   text-decoration: none;
 }

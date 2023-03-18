@@ -108,60 +108,64 @@ export default function Join() {
 
   return (
     <Main>
-      <Header />
-      <Box>
-        <Text>Reset password</Text>
-      </Box>
-      <Form method="post" noValidate>
+      <Section>
         <Box>
-          <label htmlFor="password">
-            <Text block as="em">
-              Password
-            </Text>
-            {actionData?.errors?.password && (
-              <Text block as="span" id="password-error">
-                {actionData?.errors?.password}
+          <Text>Reset password</Text>
+        </Box>
+        <Form method="post" noValidate>
+          <Box>
+            <label htmlFor="password">
+              <Text block as="em">
+                Password
               </Text>
-            )}
-          </label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            autoComplete="new-password"
-            aria-invalid={actionData?.errors?.password ? true : undefined}
-            aria-describedby="password-error"
-            ref={passwordRef}
-          />
-        </Box>
-        <Box>
-          <input
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            id="remember"
-            name="remember"
-            type="checkbox"
-          />
-          <label
-            className="ml-2 block text-sm text-gray-900"
-            htmlFor="remember"
-          >
-            <Text as="span">Remember me</Text>
-          </label>
-        </Box>
-        <Box>
-          <Button type="submit">Log in</Button>
-        </Box>
+              {actionData?.errors?.password && (
+                <Text block as="span" id="password-error">
+                  {actionData?.errors?.password}
+                </Text>
+              )}
+            </label>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              autoComplete="new-password"
+              aria-invalid={actionData?.errors?.password ? true : undefined}
+              aria-describedby="password-error"
+              ref={passwordRef}
+            />
+          </Box>
+          <Box>
+            <input
+              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              id="remember"
+              name="remember"
+              type="checkbox"
+            />
+            <label
+              className="ml-2 block text-sm text-gray-900"
+              htmlFor="remember"
+            >
+              <Text as="span">Remember me</Text>
+            </label>
+          </Box>
+          <Box>
+            <Button type="submit">Log in</Button>
+          </Box>
 
-        <input type="hidden" name="redirectTo" value={redirectTo} />
-        <Text>
-          Don`t have an account?{' '}
-          <Button>
-            <Link className="text-blue-500 underline" to={{pathname: '/join'}}>
-              Join
-            </Link>
-          </Button>
-        </Text>
-      </Form>
+          <input type="hidden" name="redirectTo" value={redirectTo} />
+          <Text>
+            Don`t have an account?{' '}
+            <Button>
+              <Link
+                className="text-blue-500 underline"
+                to={{pathname: '/join'}}
+              >
+                Join
+              </Link>
+            </Button>
+          </Text>
+        </Form>
+      </Section>
     </Main>
   )
 }

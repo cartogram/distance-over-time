@@ -5,9 +5,9 @@
   cursor: pointer;
   color: inherit;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.6;
-  font-family: var(--font-family-mono);
+  font-family: var(--font-family-sans);
   padding: 0;
   text-decoration: underline;
 }

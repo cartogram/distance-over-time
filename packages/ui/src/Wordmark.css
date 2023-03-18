@@ -1,7 +1,6 @@
 .Wordmark {
   font-weight: 500;
   display: block;
-  font-family: var(--font-family-mono);
-  padding: 0 0 5em;
-  text-transform: lowercase;
+  font-family: var(--font-family-sans);
+  color: var(--color-dark);
 }

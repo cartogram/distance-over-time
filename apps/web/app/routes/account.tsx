@@ -1,53 +1,34 @@
-import type {LoaderArgs, MetaFunction} from '@shopify/remix-oxygen'
-import {json, redirect} from '@shopify/remix-oxygen'
-import {Form, Link, useLoaderData, useSearchParams} from '@remix-run/react'
-import {Main, Text, Box, Button} from '@cartogram/ui'
-import {Header} from '~/components'
-import {z, ZodError} from 'zod'
+import {type LoaderArgs, defer} from '@shopify/remix-oxygen'
+import {useRouteLoaderData, useLoaderData} from '@remix-run/react'
+import {redirect} from '@shopify/remix-oxygen'
+import {Main, Button, Box, Section} from '@cartogram/ui'
+import type {DetailedAthlete, DetailedActivity} from 'strava'
+import {getOAuthRedirectUrl} from '~/lib/strava'
+import {Link} from '~/components'
 
-export const meta: MetaFunction = () => {
-  return {
-    title: 'Sign Up',
-  }
-}
-
-interface ActionData {
-  errors: {
-    email?: string
-    password?: string
-  }
-}
-
-export async function loader({context}: LoaderArgs) {
-  const {customer} = context
+export async function loader({context, request}: LoaderArgs) {
+  const {customer, strava, session} = context
 
   if (!customer.isAuthenticated) return redirect('/')
+  if (!session.get('strava_refresh_token'))
+    return redirect(
+      getOAuthRedirectUrl({
+        base_url: new URL(request.url).origin,
+        client_id: context.env.PUBLIC_STRAVA_CLIENT_ID,
+      }),
+    )
 
-  return json({
-    customer: await customer.get(),
-  })
+  return new Response(null)
 }
 
-export default function Dashboard() {
-  const {customer} = useLoaderData()
-
+export default function Account() {
   return (
     <Main>
-      <Header />
-      <Box>
-        <Text>Dashboard</Text>
-      </Box>
-      <Box>
-        <Text block as="span">
-          Email Address
-        </Text>
-      </Box>
-      <Box>
-        <pre>{JSON.stringify(customer, null, 2)}</pre>{' '}
-      </Box>
-      <Box>
-        <Button type="submit">Update</Button>
-      </Box>
+      <Section>
+        <form method="post" action="/account/logout">
+          <Button type="submit">Log out</Button>
+        </form>
+      </Section>
     </Main>
   )
 }

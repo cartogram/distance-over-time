@@ -1,74 +1,9 @@
-import {useLoaderData, Link} from '@remix-run/react'
-import {LoaderArgs, defer} from '@shopify/remix-oxygen'
-import {Header} from '~/components'
-import {Main, Text, Box, Button} from '@cartogram/ui'
-import {Shop} from '@shopify/hydrogen/storefront-api-types'
-
-export async function loader({context}: LoaderArgs) {
-  console.log('home loader')
-  const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
-
-  // const activities =
-  //   await context.strava?.activities.getLoggedInAthleteActivities()
-
-  return defer({
-    shop,
-    // activities,
-  })
-}
+import {Main} from '@cartogram/ui'
+import type {Shop, Customer} from '@shopify/hydrogen/storefront-api-types'
+import type {DetailedAthlete} from 'strava'
 
 export default function Index() {
-  const {
-    // activities,
-    shop: {brand},
-  } = useLoaderData()
-
-  const signUpMarkup = (
-    <>
-      <Box>
-        <Text>{brand?.slogan}</Text>
-      </Box>
-      <Box>
-        <Text>{brand?.shortDescription}</Text>
-      </Box>
-      <Box>
-        <Button>
-          <Link to="/account/join">Join</Link>
-        </Button>{' '}
-        |{' '}
-        <Button>
-          <Link to="/account/login">Log in</Link>
-        </Button>
-      </Box>
-    </>
-  )
-
-  const signedInMarkup = (
-    <>
-      <Box>
-        {/* <pre>{JSON.stringify(customer, null, 2)}</pre>{' '} */}
-        {/* <pre>{JSON.stringify(activities, null, 2)}</pre>{' '} */}
-      </Box>
-      <Box>
-        <form method="post" action="/connect">
-          <Button type="submit">Connect</Button>
-        </form>
-      </Box>
-      <Box>
-        <form method="post" action="/account/logout">
-          <Button type="submit">Log out</Button>
-        </form>
-      </Box>
-    </>
-  )
-
-  return (
-    <Main>
-      <Header />
-      {signedInMarkup}
-      {signUpMarkup}
-    </Main>
-  )
+  return <Main></Main>
 }
 
 export function ErrorBoundary({error}: {error: Error}) {

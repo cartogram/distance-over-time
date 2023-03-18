@@ -1,2 +1,90 @@
+@font-face {
+  font-family: 'Lausanne';
+  src: url('/Lausanne-300.otf');
+  font-style: normal;
+  font-display: swap;
+}
 
+:root {
+  --font-family-sans: 'Lausanne', sans-serif;
+  --ft-screen-width: 1440;
+  --ft-body-min: 1rem;
+  --ft-body-max: 5rem;
+  --ft-body-vw: calc(var(--ft-body) / var(--ft-screen-width) * 100vw);
 
+  --ft-body: 22;
+  --ft-size-body: clamp(
+    var(--ft-body-min),
+    var(--ft-body-vw),
+    var(--ft-body-max)
+  );
+
+  --ft-size-small: 13px;
+
+  --ft-size-medium: var(--ft-size-body);
+
+  --ft-large: 30;
+  --ft-size-large: clamp(
+    var(--ft-body-min) * (var(--ft-large) / var(--ft-body)),
+    var(--ft-body-vw) * (var(--ft-large) / var(--ft-body)),
+    var(--ft-body-max) * (var(--ft-large) / var(--ft-body))
+  );
+}
+
+body {
+  width: 100%;
+  background: url('/noise.png');
+  font-size: var(--ft-size-body);
+}
+
+.Header {
+  padding: 1em 2em;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  width: 100%;
+  grid-template-areas: 'logo logo logo logo logo logo nav nav nav nav nav buttons';
+  align-items: center;
+}
+
+.Header__logo {
+  grid-area: logo;
+}
+
+.Header__nav {
+  grid-area: nav;
+  display: flex;
+  white-space: nowrap;
+}
+.Header__nav span {
+  margin-right: 0.5em;
+}
+
+.Header__nav span:after {
+  content: ', ';
+}
+
+.Header__nav > a:last-child span:after {
+  content: '';
+}
+
+.text-align-right {
+  text-align: right;
+  justify-self: flex-end;
+}
+
+.Activity {
+}
+
+.Activity a {
+  grid-template-areas: 'title title title title title title distance distance distance time time time';
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+}
+
+.Activity__title {
+  grid-area: title;
+}
+
+.Activity__time {
+  grid-area: time;
+}

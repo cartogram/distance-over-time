@@ -15,22 +15,9 @@ type Element =
   | 'legend'
   | 'em'
 
-type Variant =
-  | 'headingXs'
-  | 'headingSm'
-  | 'headingMd'
-  | 'headingLg'
-  | 'headingXl'
-  | 'heading2xl'
-  | 'heading3xl'
-  | 'heading4xl'
-  | 'bodySm'
-  | 'bodyMd'
-  | 'bodyLg'
+type Size = 'small' | 'medium' | 'large'
 
 type Alignment = 'start' | 'center' | 'end' | 'justify'
-
-type FontWeight = 'regular' | 'medium' | 'semibold' | 'bold'
 
 type Color = 'success' | 'critical' | 'warning' | 'subdued' | 'text-inverse'
 
@@ -45,8 +32,6 @@ export interface TextProps {
   children: ReactNode
   /** Adjust color of text */
   color?: Color
-  /** Adjust weight of text */
-  fontWeight?: FontWeight
   /** HTML id attribute */
   id?: string
   /** Use a numeric font variant with monospace appearance */
@@ -54,11 +39,12 @@ export interface TextProps {
   /** Truncate text overflow with ellipsis */
   truncate?: boolean
   /** Typographic style of text */
-  variant?: Variant
+  size?: Size
   /** Visually hide the text */
   visuallyHidden?: boolean
   /** Make the text block level */
   block?: boolean
+  className?: string
 }
 
 export const Text = ({
@@ -67,20 +53,19 @@ export const Text = ({
   breakWord,
   children,
   color,
-  fontWeight,
   id,
   numeric = false,
   truncate = false,
-  variant,
+  size,
   visuallyHidden = false,
   block = false,
+  className,
 }: TextProps) => {
   const Component = as || (visuallyHidden ? 'span' : 'p')
 
-  const className = classNames(
+  const classes = classNames(
     'Text',
-    variant,
-    fontWeight,
+    size,
     block && 'block',
     (alignment || truncate) && 'block',
     alignment,
@@ -89,10 +74,11 @@ export const Text = ({
     numeric,
     truncate,
     visuallyHidden,
+    className,
   )
 
   return (
-    <Component className={className} {...(id && {id})}>
+    <Component className={classes} {...(id && {id})}>
       {children}
     </Component>
   )

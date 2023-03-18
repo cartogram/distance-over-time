@@ -1,4 +1,21 @@
 .Main {
-  padding: 4em;
-  max-width: 65em;
+  padding: 1em 2em;
+  max-width: 100em;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  width: 100%;
+  grid-template-areas: 'one one two two' 'main main main main';
+}
+
+.Section__left {
+  grid-area: one;
+}
+
+.Section__right {
+  grid-area: two;
+}
+
+.Section__full {
+  grid-area: main;
 }

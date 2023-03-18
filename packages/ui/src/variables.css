@@ -1,12 +1,17 @@
-/* 
- * Variables 
+/*
+ * Variables
  * --------------------------------------------------------------
  */
 
 :root {
   --color-dark: rgb(14, 20, 67);
-  --font-family-sans: 'General Sans', sans-serif;
-  --font-family-serif: 'Zodiak', 'Stardom', serif;
-  --font-family-mono: 'JetBrains Mono', sans-serif;
+  --font-family-sans: 'General Sans', system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+    'Fira Sans', 'Droid Sans', 'Helvetica Neue', Arial, sans-serif;
+  --font-family-serif: serif;
+  --font-family-mono: ui-monospace, Menlo, Monaco, 'Cascadia Mono',
+    'Segoe UI Mono', 'Roboto Mono', 'Oxygen Mono', 'Ubuntu Monospace',
+    'Source Code Pro', 'Fira Mono', 'Droid Sans Mono', 'Courier New', monospace;
   --light: rgb(255, 254, 244);
+  --grid-gutter: 1.5rem;
 }

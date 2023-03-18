@@ -55,16 +55,12 @@ export const action: ActionFunction = async ({request, context}) => {
       remember: Boolean(formData.get('remember')),
     })
 
-    await customer.authenticate({
+    const {data, headers, status} = await customer.authenticate({
       email,
       password,
     })
 
-    return redirect('/dashboard', {
-      headers: {
-        'Set-Cookie': await session.commit(),
-      },
-    })
+    return json({data}, {status, headers})
   } catch (error: unknown) {
     console.log(error)
 
@@ -184,7 +180,7 @@ export default function Join() {
         </Text>
 
         <Box>
-          <Link className="text-blue-500 underline" to="/recover">
+          <Link className="text-blue-500 underline" to="/account/recover">
             Forgot
           </Link>
         </Box>

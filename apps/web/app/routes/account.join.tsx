@@ -52,12 +52,14 @@ export const action: ActionFunction = async ({request, context}) => {
       redirectTo: formData.get('redirectTo'),
     })
 
-    await customer.create({
+    const [result, headers, status] = await customer.create({
       email,
       password,
     })
 
-    return null
+    console.log(result, headers, status)
+
+    return json({customer: result}, {status, headers})
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       return json({

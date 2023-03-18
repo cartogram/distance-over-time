@@ -18,7 +18,8 @@
     "cross-env": "^7.0.3",
     "react": "^18.0.2",
     "react-dom": "^18.0.2",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "@cartogram/eslint-config": "*"
   },
   "prettier": "@cartogram/prettier-config",
   "devDependencies": {

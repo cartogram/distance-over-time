@@ -59,16 +59,15 @@ export const action: ActionFunction = async ({
       password: formData.get('password'),
     })
 
-    const result = await customer.reset({
+    const {data, headers, status} = await customer.reset({
       password,
       id,
       resetToken,
     })
 
     return redirect('/dashboard', {
-      headers: {
-        'Set-Cookie': await session.commit(),
-      },
+      headers,
+      status,
     })
   } catch (error: unknown) {
     console.log(error)

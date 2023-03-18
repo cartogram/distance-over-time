@@ -3,7 +3,8 @@
 /// <reference types="@shopify/oxygen-workers-types" />
 
 import type {Storefront} from '@shopify/hydrogen'
-import type {HydrogenSession, CustomerContext} from './server'
+import type {HydrogenSession} from './server'
+import type {Customer} from '@cartogram/customer'
 
 declare global {
   /**
@@ -33,7 +34,7 @@ declare global {
  */
 declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
-    customer: CustomerContext
+    customer: Customer
     session: HydrogenSession
     storefront: Storefront
     env: Env

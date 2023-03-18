@@ -7,7 +7,9 @@ import {Shop} from '@shopify/hydrogen/storefront-api-types'
 export async function loader({context}: LoaderArgs) {
   const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
 
-  return defer({shop, customer: context.customer.details})
+  console.log(context.customer.token)
+
+  return defer({shop, customer: await context.customer.profile})
 }
 
 export default function Index() {
@@ -16,7 +18,7 @@ export default function Index() {
     shop: {brand},
   } = useLoaderData()
 
-  // console.log(user)
+  console.log(customer)
 
   const signUpMarkup = (
     <>

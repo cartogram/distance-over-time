@@ -1,5 +1,3 @@
-import fetch, {BodyInit} from 'node-fetch'
-
 import {RefreshTokenRequest, RefreshTokenResponse} from './types'
 
 type RequestParams = {
@@ -11,13 +9,14 @@ type RequestParams = {
 
 export class Request {
   config: RefreshTokenRequest
-  response: RefreshTokenResponse
+  response: RefreshTokenResponse | null = null
 
   constructor(config: RefreshTokenRequest) {
     this.config = config
   }
 
   private async getAccessToken(): Promise<RefreshTokenResponse> {
+    console.log('getting access token', this.config)
     if (
       !this.response ||
       this.response?.expires_at < new Date().getTime() / 1000
@@ -36,12 +35,19 @@ export class Request {
         },
       )
 
+      console.log('yo', await response.text())
+
       if (!response.ok) {
+        console.log('no')
         throw response
       }
 
+      console.log('yes')
       this.response = (await response.json()) as RefreshTokenResponse
     }
+
+    console.log('got access token', this.response)
+    console.log(this.response)
     return this.response
   }
 
@@ -50,7 +56,10 @@ export class Request {
     uri: string,
     params?: RequestParams,
   ): Promise<Response> {
+    console.log('making api request', params)
+
     if (!params?.access_token) await this.getAccessToken()
+
     const query: string =
       params?.query && Object.keys(params?.query).length
         ? `?${new URLSearchParams(
@@ -62,7 +71,9 @@ export class Request {
         : ''
     const headers = {
       Authorization: `Bearer ${
-        params?.access_token ? params?.access_token : this.response.access_token
+        params?.access_token
+          ? params?.access_token
+          : this.response?.access_token
       }`,
       'content-type': 'application/json',
       ...(params?.headers ? params.headers : {}),
@@ -84,6 +95,8 @@ export class Request {
         headers,
       },
     )
+
+    console.log('got something')
 
     if (!response.ok) {
       throw response

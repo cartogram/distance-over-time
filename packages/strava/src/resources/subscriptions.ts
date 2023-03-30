@@ -1,4 +1,4 @@
-import { Request } from '../request'
+import {Request} from '../request'
 
 type Subscription = {
   id: number
@@ -26,8 +26,8 @@ export class Subscriptions {
     return this.request.makeApiRequest('post', '/push_subscriptions', {
       body: {
         ...params,
-        client_id: this.request.config.client_id,
-        client_secret: this.request.config.client_secret,
+        // client_id: this.request.config?.client_id,
+        // client_secret: this.request.config.client_secret,
       },
     })
   }
@@ -35,8 +35,8 @@ export class Subscriptions {
   async deleteSubscription(id: number): Promise<any> {
     return this.request.makeApiRequest('delete', `/push_subscriptions/${id}`, {
       body: {
-        client_id: this.request.config.client_id,
-        client_secret: this.request.config.client_secret,
+        // client_id: this.request.config.client_id,
+        // client_secret: this.request.config.client_secret,
       },
     })
   }
@@ -44,8 +44,8 @@ export class Subscriptions {
   async getSubscriptions(): Promise<Subscription[]> {
     return this.request.makeApiRequest('get', '/push_subscriptions', {
       query: {
-        client_id: this.request.config.client_id,
-        client_secret: this.request.config.client_secret,
+        // client_id: this.request.config.client_id,
+        // client_secret: this.request.config.client_secret,
       },
     })
   }

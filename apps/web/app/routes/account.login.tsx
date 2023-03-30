@@ -33,7 +33,7 @@ const schema = z.object({
 export async function loader({context}: LoaderArgs) {
   const {customer} = context
 
-  if (customer.isAuthenticated) return redirect('/')
+  if (customer.isAuthenticated) return redirect('/account')
 
   return json({})
 }
@@ -46,8 +46,7 @@ export const action: ActionFunction = async ({request, context}) => {
     const {
       email,
       password,
-      redirectTo = new URL(request.url).pathname,
-      remember,
+      redirectTo = '/account',
     } = schema.parse({
       email: formData.get('email'),
       password: formData.get('password'),
@@ -60,10 +59,19 @@ export const action: ActionFunction = async ({request, context}) => {
       password,
     })
 
-    return json({data}, {status, headers})
-  } catch (error: unknown) {
-    console.log(error)
+    if (data.errors.length) {
+      return json(
+        {
+          errors: {
+            email: data.errors[0].message,
+          },
+        },
+        {status, headers},
+      )
+    }
 
+    return redirect(redirectTo, {headers})
+  } catch (error: unknown) {
     if (error instanceof ZodError) {
       return json({
         errors: error.errors.reduce((acc, error) => {
@@ -148,20 +156,6 @@ export default function Join() {
           />
         </Box>
 
-        <Box>
-          <input
-            className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            id="remember"
-            name="remember"
-            type="checkbox"
-          />
-          <label
-            className="ml-2 block text-sm text-gray-900"
-            htmlFor="remember"
-          >
-            <Text as="span">Remember me</Text>
-          </label>
-        </Box>
         <Box>
           <Button type="submit">Log in</Button>
         </Box>

@@ -1,6 +1,6 @@
-import { LatLng, StreamKeys } from '..'
+// import {LatLng, StreamKeys} from '..'
 
-export interface BaseStream<StreamKey extends StreamKeys, Data> {
+export interface BaseStream<StreamKey extends any, Data> {
   type: StreamKey
   original_size: number
   resolution: 'low' | 'medium' | 'high'
@@ -22,4 +22,4 @@ export type Stream = BaseStream<
   number
 >
 
-export type LatLngStream = BaseStream<'latlng', LatLng>
+export type LatLngStream = BaseStream<'latlng', any>

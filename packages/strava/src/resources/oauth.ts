@@ -1,19 +1,16 @@
-import fetch from 'node-fetch'
-
-import { RefreshTokenRequest, RefreshTokenResponse } from '../types'
+import {InitConfig, RefreshTokenResponse} from '../types'
+import {STRAVA_URL} from '../constants'
 
 export class Oauth {
-  constructor() {}
+  constructor(private config: InitConfig) {}
 
-  async refreshTokens(
-    token: RefreshTokenRequest,
-  ): Promise<RefreshTokenResponse> {
+  async refreshTokens(token: InitConfig): Promise<RefreshTokenResponse> {
     if (!token) {
       throw new Error('No token provided')
     }
     const query: string = new URLSearchParams({
-      client_id: token.client_id,
-      client_secret: token.client_secret,
+      // client_id: token.client_id,
+      // client_secret: token.client_secret,
       refresh_token: token.refresh_token,
       grant_type: 'refresh_token',
     }).toString()
@@ -28,5 +25,17 @@ export class Oauth {
       throw response
     }
     return (await response.json()) as RefreshTokenResponse
+  }
+
+  url(): string {
+    const stravaSearchParams = new URLSearchParams({
+      // client_id: this.config.client_id,
+      response_type: 'code',
+      redirect_uri: 'http://localhost:3000/connect',
+      approval_prompt: 'force',
+      scope: 'read',
+    })
+
+    return `${STRAVA_URL}?${stravaSearchParams.toString()}`
   }
 }

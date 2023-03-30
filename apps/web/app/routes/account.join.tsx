@@ -32,7 +32,7 @@ const schema = z.object({
 export async function loader({context}: LoaderArgs) {
   const {customer} = context
 
-  if (customer.isAuthenticated) return redirect('/')
+  if (customer.isAuthenticated) return redirect('/account')
 
   return json({})
 }
@@ -45,21 +45,23 @@ export const action: ActionFunction = async ({request, context}) => {
     const {
       email,
       password,
-      redirectTo = new URL(request.url).pathname,
+      redirectTo = '/account',
     } = schema.parse({
       email: formData.get('email'),
       password: formData.get('password'),
       redirectTo: formData.get('redirectTo'),
     })
 
-    const [result, headers, status] = await customer.create({
+    const {data, headers, status} = await customer.create({
       email,
       password,
     })
 
-    console.log(result, headers, status)
+    if (status !== 400) {
+      return json(data)
+    }
 
-    return json({customer: result}, {status, headers})
+    return redirect(redirectTo, {headers})
   } catch (error: unknown) {
     if (error instanceof ZodError) {
       return json({
@@ -70,8 +72,6 @@ export const action: ActionFunction = async ({request, context}) => {
         }, {} as Record<string, string>),
       })
     }
-
-    console.log(error)
 
     return json({
       errors: {

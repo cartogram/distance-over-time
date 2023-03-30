@@ -5,23 +5,14 @@ import {
   createRequestHandler,
   getBuyerIp,
   createCookieSessionStorage,
-  redirect,
   type CookieSerializeOptions,
   type SessionStorage,
   type Session,
 } from '@shopify/remix-oxygen'
-import {type AppLoadContext} from '@shopify/remix-oxygen'
-import type {
-  CustomerAccessTokenCreatePayload,
-  CustomerCreatePayload,
-  CustomerUpdatePayload,
-  CustomerRecoverPayload,
-  CustomerResetPayload,
-  CustomerUserError,
-  // Customer,
-} from '@shopify/hydrogen/storefront-api-types'
 
 import {Customer} from '@cartogram/customer'
+// import {Strava} from '@cartogram/strava'
+import {Strava} from 'strava'
 
 /**
  * Export a fetch handler in module format.
@@ -65,19 +56,56 @@ export default {
       /**
        * Create a Hydrogen Customer client.
        */
-      const customer = await Customer.init(
-        request,
+
+      const customer = new Customer(
         storefront,
-        createCookieSessionStorage({
-          cookie: {
-            name: 'session',
-            httpOnly: true,
-            path: '/',
-            sameSite: 'lax',
-            secrets: [env.SESSION_SECRET],
+        {
+          get: (val) => {
+            return session.get(val)
           },
-        }),
+          set: (key, val) => {
+            return session.set(key, val)
+          },
+          remove: (val) => {
+            return session.unset(val)
+          },
+          commit: () => {
+            return session.commit()
+          },
+        },
+        {},
       )
+
+      // const strava = new Strava({
+      //   client_id: env.PUBLIC_STRAVA_CLIENT_ID,
+      //   client_secret: env.STRAVA_CLIENT_SECRET,
+      //   refresh_token: 'def',
+      // })
+
+      /**
+       * Create a Hydrogen Strava client.
+       */
+      // const strava = new Strava(
+      //   {
+      //     client_id:
+      //     client_secret: env.STRAVA_CLIENT_SECRET,
+      //   },
+      //   createCookieSessionStorage({
+      //     cookie: {
+      //       name: 'session',
+      //       httpOnly: true,
+      //       path: '/',
+      //       sameSite: 'lax',
+      //       secrets: [env.SESSION_SECRET],
+      //     },
+      //   }),
+      //   request,
+      // )
+
+      // const url = new URL(request.url)
+      // const code = url.searchParams.get('code')
+
+      // console.log(new URL(request.url).searchParams.get('code'))
 
       /**
        * Create a Remix request handler and pass
@@ -157,7 +185,6 @@ export class HydrogenSession {
   }
 
   commit(options?: CookieSerializeOptions) {
-    console.log('commit', this.session.get('accessToken'))
     return this.sessionStorage.commitSession(this.session, options)
   }
 }

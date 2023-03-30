@@ -71,15 +71,19 @@ type UpdateActivityByIdRequest = {
 }
 
 export class Activities {
-  private readonly request: Request
+  constructor(private readonly request: Request, private accessToken: string) {
+    console.log('HEYYYYY')
+    if (request === null) {
+      throw new Error('Request is null')
+    }
 
-  constructor(request: Request) {
     this.request = request
+    this.accessToken = accessToken
   }
 
   async createActivity(
     params: CreateActivityRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<DetailedActivity> {
     return await this.request.makeApiRequest<DetailedActivity>(
       'post',
@@ -90,7 +94,7 @@ export class Activities {
 
   async getActivityById(
     params: GetActivityByIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<DetailedActivity> {
     const {id, ...query} = params
     return await this.request.makeApiRequest<DetailedActivity>(
@@ -102,7 +106,7 @@ export class Activities {
 
   async getCommentsByActivityId(
     params: GetCommentsByActivityIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<Comment[]> {
     const {id, ...query} = params
     return await this.request.makeApiRequest<Comment[]>(
@@ -114,7 +118,7 @@ export class Activities {
 
   async getKudoersByActivityId(
     params: GetKudoersByActivityIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<SummaryAthlete[]> {
     const {id, ...query} = params
     return await this.request.makeApiRequest<SummaryAthlete[]>(
@@ -137,7 +141,7 @@ export class Activities {
 
   async getPhotosByActivityId(
     params: GetPhotosByActivityIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<Lap[]> {
     const {id, ...query} = params
     return await this.request.makeApiRequest<Lap[]>(
@@ -150,6 +154,7 @@ export class Activities {
   async getLoggedInAthleteActivities(
     params?: GetLoggedInAthleteActivitiesRequest,
   ): Promise<SummaryActivity[]> {
+    console.log('getting activities')
     return await this.request.makeApiRequest<SummaryActivity[]>(
       'get',
       '/athlete/activities',
@@ -159,7 +164,7 @@ export class Activities {
 
   async getZonesByActivityId(
     params: GetZonesByActivityIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<ActivityZone[]> {
     const {id, ...query} = params
     return await this.request.makeApiRequest<ActivityZone[]>(
@@ -171,7 +176,7 @@ export class Activities {
 
   async updateActivityById(
     params: UpdateActivityByIdRequest,
-    access_token?: string,
+    access_token: string = this.accessToken,
   ): Promise<DetailedActivity> {
     const {id, ...body} = params
     return await this.request.makeApiRequest<DetailedActivity>(

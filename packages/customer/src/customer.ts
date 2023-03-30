@@ -1,8 +1,5 @@
 import type {
-  Cart as CartType,
-  CartInput,
   CustomerCreatePayload,
-  UserError,
   CustomerRecoverPayload,
   CustomerResetPayload,
   CustomerUserError,
@@ -12,13 +9,18 @@ import type {
   Customer as CustomerType,
   CustomerAccessTokenCreatePayload,
   MutationCustomerRecoverArgs,
-  MutationCustomerResetArgs,
-  MutationCustomerUpdateArgs,
-  MutationCustomerCreateArgs,
+  CustomerUpdateInput,
   CustomerAccessTokenCreateInput,
 } from '@shopify/hydrogen/storefront-api-types'
 import {createStorefrontClient} from '@shopify/hydrogen'
 import {type SessionStorage, type Session} from '@shopify/remix-oxygen'
+
+const debug =
+  (prefix: string) =>
+  (...args: Parameters<Console['log']>) =>
+    console.log(`[H2:${prefix}]`, ...args)
+
+const log = debug('customer')
 
 type Storefront = ReturnType<typeof createStorefrontClient>['storefront']
 
@@ -26,58 +28,60 @@ interface CustomerOptions {
   customerFragment?: string
 }
 
+interface TokenStorage {
+  get(key: string): string | null
+  set(key: string, value: string | null): void
+  remove(key: string): void
+  commit(): Promise<string>
+}
+
 interface Result {
-  // | CustomerAccessTokenCreatePayload
-  // | CustomerCreatePayload
-  // | CustomerUpdatePayload
   token?: string
   customer?: CustomerType | null
   errors: CustomerUserError[]
 }
 
-interface OperationOptions {
-  redirect?: string
-}
+interface OperationOptions {}
 
 export class Customer {
   private customerFragment: string
   public headers = new Headers()
 
   constructor(
-    private sessionStorage: SessionStorage,
-    private session: Session,
     private storefront: Storefront,
+    private storage: TokenStorage,
     options: CustomerOptions,
   ) {
+    log('Creating customer client')
     this.customerFragment = options.customerFragment || customerFragment
   }
 
-  get profile(): CustomerType | null {
-    if (!this.isAuthenticated) {
-      return null
+  get token() {
+    const token = this.storage.get('token')
+    log('Getting token', token)
+
+    return token
+  }
+
+  set token(token: string | null) {
+    log('Setting token', token)
+    if (token === null) {
+      this.storage.remove('token')
+      return
     }
 
-    return this.session.get('customer')
-  }
-
-  set profile(customer: CustomerType | null) {
-    this.session.set('customer', customer)
-  }
-
-  get token() {
-    return this.session.get('token')
-  }
-
-  set token(token: string) {
-    this.session.set('token', token)
+    this.storage.set('token', token)
   }
 
   get isAuthenticated() {
+    log('isAuthenticated()', this.token)
+
     return Boolean(this.token)
   }
 
   async get() {
-    console.log('get customer', this.token)
+    log('Getting customer')
+
     if (!this.isAuthenticated) {
       return null
     }
@@ -97,16 +101,16 @@ export class Customer {
     input: CustomerAccessTokenCreateInput,
     options: OperationOptions = {},
   ) {
+    log('authenticate()', this.isAuthenticated)
+
     if (this.isAuthenticated) {
       const response = await this.respond(
-        {errors: [], customer: this.profile},
+        {errors: [], customer: await this.get()},
         options,
       )
 
       return response
     }
-
-    console.log('authenticate', input)
 
     const {customerAccessTokenCreate} = await this.storefront.mutate<{
       customerAccessTokenCreate: CustomerAccessTokenCreatePayload
@@ -117,7 +121,7 @@ export class Customer {
     const response = await this.respond(
       {
         token: customerAccessTokenCreate?.customerAccessToken?.accessToken,
-        customer: this.profile,
+        customer: await this.get(),
         errors: customerAccessTokenCreate.customerUserErrors,
       },
       options,
@@ -162,16 +166,13 @@ export class Customer {
     )
   }
 
-  async update(
-    input: MutationCustomerUpdateArgs,
-    options: OperationOptions = {},
-  ) {
-    if (this.isAuthenticated) {
+  async update(customer: CustomerUpdateInput, options: OperationOptions = {}) {
+    if (!this.isAuthenticated) {
       const response = this.respond(
         {
           errors: [
             {
-              message: 'Customer already authenticated',
+              message: 'Customer not authenticated',
             },
           ],
         },
@@ -185,13 +186,15 @@ export class Customer {
       customerUpdate: CustomerUpdatePayload
     }>(customerUpdateMutation(this.customerFragment), {
       variables: {
-        input,
+        customer,
+        customerAccessToken: this.token,
       },
     })
 
     const response = await this.respond(
       {
         customer: customerUpdate.customer,
+        token: customerUpdate.customerAccessToken?.accessToken,
         errors: customerUpdate.customerUserErrors,
       },
       options,
@@ -201,15 +204,13 @@ export class Customer {
   }
 
   async recover(
-    customer: MutationCustomerRecoverArgs,
+    email: MutationCustomerRecoverArgs,
     options: OperationOptions = {},
   ) {
-    console.log('recover', customer)
-
     const {customerRecover} = await this.storefront.mutate<{
       customerRecover: CustomerRecoverPayload
-    }>(customerRecoverMutation(this.customerFragment), {
-      variables: customer,
+    }>(customerRecoverMutation(), {
+      variables: email,
     })
 
     const response = await this.respond(
@@ -266,32 +267,11 @@ export class Customer {
     return Promise.resolve(null)
   }
 
-  async logout(options: OperationOptions = {}) {
-    this.session.unset('token')
-    this.session.unset('customer')
-    let status = 200
+  async logout() {
+    this.storage.set('token', null)
+    this.headers.set('Set-Cookie', await this.storage.commit())
 
-    this.headers.set(
-      'Set-Cookie',
-      await this.sessionStorage.commitSession(this.session),
-    )
-
-    if (options?.redirect) {
-      this.headers.set('Location', options.redirect)
-      status = 302
-    }
-
-    return {headers: this.headers, status}
-  }
-
-  static async init(
-    request: Request,
-    storefront: Storefront,
-    storage: SessionStorage,
-    options: CustomerOptions = {},
-  ) {
-    const session = await storage.getSession(request.headers.get('Cookie'))
-    return new this(storage, session, storefront, options)
+    return {headers: this.headers, status: 200}
   }
 
   private async respond(
@@ -304,17 +284,9 @@ export class Customer {
       status = 400
     }
 
-    if (options?.redirect) {
-      this.headers.set('Location', options.redirect)
-      status = 302
-    }
-
     this.token = result?.token || this.token
-    this.profile = result?.customer || (await this.get()) || this.profile
-    this.headers.set(
-      'Set-Cookie',
-      await this.sessionStorage.commitSession(this.session),
-    )
+
+    this.headers.set('Set-Cookie', await this.storage.commit())
 
     return {data: result, headers: this.headers, status}
   }
@@ -344,6 +316,10 @@ export const customerFragment = /* GraphQL */ `
     lastName
     phone
     email
+    metafield(namespace: "custom", key: "athlete") {
+      key
+      value
+    }
     defaultAddress {
       id
       formatted
@@ -372,6 +348,7 @@ export const errorFragment = /* GraphQL */ `
 /**
  * MUTATIONS
  */
+
 export const loginMutation = (): string => /* GraphQL */ `
   mutation customerAccessTokenCreate($input: CustomerAccessTokenCreateInput!) {
     customerAccessTokenCreate(input: $input) {
@@ -427,9 +404,7 @@ export const customerUpdateMutation = (
   ${errorFragment}
 `
 
-export const customerRecoverMutation = (
-  customerFragment: string,
-): string => /* GraphQL */ `
+export const customerRecoverMutation = (): string => /* GraphQL */ `
   mutation customerRecover($email: String!) {
     customerRecover(email: $email) {
       customerUserErrors {

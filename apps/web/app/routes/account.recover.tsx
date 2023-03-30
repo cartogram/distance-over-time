@@ -44,12 +44,9 @@ export const action: ActionFunction = async ({request, context}) => {
       email: formData.get('email'),
     })
 
-    const {status, headers} = await customer.recover(
-      {
-        email,
-      },
-      {redirect: '/account/reset'},
-    )
+    const {status, headers} = await customer.recover({
+      email,
+    })
 
     return redirect('/account/reset', {status, headers})
   } catch (error: unknown) {

@@ -24,7 +24,7 @@ export async function loader({context}: LoaderArgs) {
   if (!customer.isAuthenticated) return redirect('/')
 
   return json({
-    customer: customer.details,
+    customer: await customer.get(),
   })
 }
 

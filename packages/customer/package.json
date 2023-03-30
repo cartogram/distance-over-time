@@ -1,0 +1,35 @@
+{
+  "name": "@cartogram/customer",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf .turbo && rm -rf node_modules && rm -rf dist",
+    "dev": "tsc -w",
+    "lint": "TIMING=1 eslint src/**/*.ts* --fix",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@cartogram/eslint-config": "*",
+    "@cartogram/tsconfig": "*",
+    "@shopify/hydrogen": "2023.1.6",
+    "debug": "^4.3.4",
+    "eslint": "^7.32.0",
+    "typescript": "^4.8.3",
+    "vitest": "^0.23.4"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@cartogram/eslint-config/package"
+    ]
+  },
+  "dependencies": {
+    "@shopify/remix-oxygen": "^1.0.4"
+  }
+}

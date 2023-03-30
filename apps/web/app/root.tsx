@@ -25,9 +25,13 @@ export const meta: MetaFunction = () => {
 }
 
 export async function loader({context, request}: LoaderArgs) {
+  console.log('root loader')
   const shop = await context.storefront.query<{shop: Shop}>(QUERY)
+  const customer = await context.customer.get()
 
-  return defer({shop, customer: context.customer.details})
+  console.log(customer)
+
+  return defer({shop, customer})
 }
 
 export default function App() {

@@ -5,18 +5,23 @@ import {Main, Text, Box, Button} from '@cartogram/ui'
 import {Shop} from '@shopify/hydrogen/storefront-api-types'
 
 export async function loader({context}: LoaderArgs) {
+  console.log('home loader')
   const {shop} = await context.storefront.query<{shop: Shop}>(QUERY)
 
-  return defer({shop, customer: context.customer.details})
+  // const activities =
+  //   await context.strava?.activities.getLoggedInAthleteActivities()
+
+  return defer({
+    shop,
+    // activities,
+  })
 }
 
 export default function Index() {
   const {
-    customer,
+    // activities,
     shop: {brand},
   } = useLoaderData()
-
-  // console.log(user)
 
   const signUpMarkup = (
     <>
@@ -41,7 +46,8 @@ export default function Index() {
   const signedInMarkup = (
     <>
       <Box>
-        <pre>{JSON.stringify(customer, null, 2)}</pre>{' '}
+        {/* <pre>{JSON.stringify(customer, null, 2)}</pre>{' '} */}
+        {/* <pre>{JSON.stringify(activities, null, 2)}</pre>{' '} */}
       </Box>
       <Box>
         <form method="post" action="/connect">

@@ -7,60 +7,94 @@ import {
 const CLIENT_ID = '73615'
 const STRAVA_URL = `https://www.strava.com/oauth/authorize`
 
-export const action: ActionFunction = async ({request}) => {
-  const stravaSearchParams = new URLSearchParams({
-    client_id: CLIENT_ID,
-    response_type: 'code',
-    redirect_uri: 'http://localhost:3000/connect',
-    approval_prompt: 'force',
-    scope: 'read',
-  })
-
-  const stravaUrl = `${STRAVA_URL}?${stravaSearchParams.toString()}`
-
-  return redirect(stravaUrl)
+export const action: ActionFunction = async ({context, request}) => {
+  return redirect(getOAuthRedirectUrl(request.url))
 }
 
 export async function loader({context, request}: LoaderArgs) {
+  const {customer} = context
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
+  const step = url.searchParams.get('step')
+  const athelete = url.searchParams.get('athelete')
 
-  if (code) {
-    const response = await fetch('https://www.strava.com/oauth/token', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      body: new URLSearchParams({
-        client_id: CLIENT_ID,
-        client_secret: context.env.STRAVA_CLIENT_SECRET,
-        code,
-        grant_type: 'authorization_code',
-      }),
-    })
+  const stage = step ? parseInt(step, 10) : code ? 1 : 0
 
-    const {access_token, refresh_token, athlete} = await response.json<{
-      refresh_token: string
-      access_token: string
-      athlete: Record<string, unknown>
-    }>()
+  return null
+  // switch (stage) {
+  //   case 0: {
+  //     break
+  //   }
+  //   case 1: {
+  //     if (!code) {
+  //       throw new Error('No code returned from Strava')
+  //     }
 
-    console.log('access_token', access_token)
-    console.log('refresh_token', refresh_token)
+  //     const {data} = await strava.exchangeCodeForToken(code)
 
-    context.session.set('stravaAccessStoken', access_token)
-    context.session.set('stravaRefreshToken', refresh_token)
+  //     if (!data) {
+  //       throw new Error('No data returned from Strava')
+  //     }
 
-    // console.log(athlete)
+  //     const {headers, status} = await strava.init({
+  //       refresh_token: data.refresh_token,
+  //       access_token: data.access_token,
+  //       redirect: `/connect?step=2&athelete=${JSON.stringify(data.athlete)}`,
+  //     })
 
-    console.log(session)
-    console.log(res)
-    return redirect('/', {
-      headers: {
-        'Set-Cookie': await context.session.commit(),
-      },
-    })
-  }
+  //     return redirect(
+  //       `/connect?step=2&athelete=${JSON.stringify(data.athlete)}`,
+  //       {
+  //         status,
+  //         headers,
+  //       },
+  //     )
+  //   }
 
-  throw new Error('Connection failed')
+  //   case 2: {
+  //     if (!athelete) {
+  //       throw new Error('No athelete data')
+  //     }
+
+  //     const {firstname, lastname, ...rest} = JSON.parse(athelete)
+
+  //     console.log(rest)
+
+  //     const {data, status, headers} = await customer.update(
+  //       {
+  //         firstName: firstname,
+  //         // lastName: id,
+  //         phone: null,
+  //       },
+  //       {redirect: '/account'},
+  //     )
+
+  //     console.log(data)
+
+  //     return redirect(`/account`, {
+  //       status,
+  //       headers,
+  //     })
+  //   }
+  // }
+
+  // return new Response('Something went wrong in authentication flow', {
+  //   status: 400,
+  // })
+}
+
+function getOAuthRedirectUrl(url: string): string {
+  const stravaSearchParams = new URLSearchParams({
+    client_id: CLIENT_ID,
+    response_type: 'code',
+    redirect_uri: url,
+    approval_prompt: 'force',
+    scope: 'read,activity:read',
+  })
+
+  return `${STRAVA_URL}?${stravaSearchParams.toString()}`
+}
+
+export default function Connect() {
+  return <>Connect...</>
 }

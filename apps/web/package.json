@@ -4,10 +4,13 @@
   "scripts": {
     "build": "shopify hydrogen build",
     "dev": "shopify hydrogen dev",
+    "debug": "DUBUG=hydrogen:customer shopify hydrogen dev",
     "preview": "shopify hydrogen preview",
     "lint": "eslint ./app/**/*.ts* --fix"
   },
   "dependencies": {
+    "@cartogram/customer": "*",
+    "@cartogram/strava": "*",
     "@cartogram/ui": "*",
     "@remix-run/react": "1.12.0",
     "@shopify/cli": "3.29.0",
@@ -18,6 +21,7 @@
     "cross-env": "^7.0.3",
     "react": "^18.0.2",
     "react-dom": "^18.0.2",
+    "strava": "^2.1.0",
     "zod": "^3.21.4"
   },
   "prettier": "@cartogram/prettier-config",

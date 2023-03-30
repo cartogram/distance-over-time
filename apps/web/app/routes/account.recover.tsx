@@ -44,11 +44,11 @@ export const action: ActionFunction = async ({request, context}) => {
       email: formData.get('email'),
     })
 
-    await customer.recover({
+    const {status, headers} = await customer.recover({
       email,
     })
 
-    return redirect('/login')
+    return redirect('/account/reset', {status, headers})
   } catch (error: unknown) {
     console.log(error)
 
@@ -113,9 +113,7 @@ export default function Join() {
         </Box>
 
         <Button>
-          <Link className="text-blue-500 underline" to={{pathname: '/join'}}>
-            Back to login
-          </Link>
+          <Link to={{pathname: '/account/join'}}>Back to login</Link>
         </Button>
       </Form>
     </Main>

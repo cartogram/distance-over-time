@@ -9,9 +9,14 @@ export async function loader({context, request}: LoaderArgs) {
   const {env, session} = context
   const url = new URL(request.url)
   const code = url.searchParams.get('code')
+  const error = url.searchParams.get('error')
 
   if (!code) {
     throw new Error('No code returned from Strava')
+  }
+
+  if (error) {
+    throw new Error(error)
   }
 
   const data = await exchangeCodeForToken<Record<string, string>>({
@@ -32,4 +37,13 @@ export async function loader({context, request}: LoaderArgs) {
 
 export default function Connect() {
   return <>Connecting to strava...</>
+}
+
+export function ErrorBoundary({error}: {error: Error}) {
+  return (
+    <>
+      <h1>Something went wrong</h1>
+      <pre>{error.message}</pre>
+    </>
+  )
 }

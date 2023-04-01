@@ -10,15 +10,11 @@ import {
 import styles from '~/styles.css'
 import ui from '@cartogram/ui/index.css'
 import {Box, Button, Avatar} from '@cartogram/ui'
-import {Header, Link} from '~/components'
+import {Header, Link, Error} from '~/components'
 import type {Shop} from '@shopify/hydrogen/storefront-api-types'
 import {type LoaderArgs, type MetaFunction, defer} from '@shopify/remix-oxygen'
 
 export const links = () => [
-  {
-    rel: 'stylesheet',
-    href: 'https://api.fontshare.com/v2/css?f[]=supreme@2,1&f[]=general-sans@1&display=swap',
-  },
   {rel: 'stylesheet', href: ui},
   {rel: 'stylesheet', href: styles},
 ]
@@ -50,7 +46,7 @@ export default function App() {
         {content: 'Join', href: '/account/join'},
       ]
 
-  const User = customer ? (
+  const User = athlete ? (
     <>
       <Link to="/account">
         <Avatar shape="" source={athlete.profile_medium} />
@@ -83,12 +79,13 @@ export function ErrorBoundary({error}: {error: Error}) {
   return (
     <html lang="en">
       <head>
-        <title>Oh no!</title>
+        <title>Error</title>
         <Meta />
         <Links />
       </head>
       <body>
-        <h1>Oh no!</h1>
+        <Header />
+        <Error error={error} />
         <Scripts />
       </body>
     </html>

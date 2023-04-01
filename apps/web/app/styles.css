@@ -9,7 +9,7 @@
   --font-family-sans: 'Lausanne', sans-serif;
   --ft-screen-width: 1440;
   --ft-body-min: 1rem;
-  --ft-body-max: 5rem;
+  --ft-body-max: 1.5rem;
   --ft-body-vw: calc(var(--ft-body) / var(--ft-screen-width) * 100vw);
 
   --ft-body: 22;
@@ -87,4 +87,16 @@ body {
 
 .Activity__time {
   grid-area: time;
+}
+
+.Error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.Error__inside {
+  border: 1px solid;
 }

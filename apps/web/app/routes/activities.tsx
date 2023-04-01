@@ -13,20 +13,26 @@ export async function loader({context, request}: LoaderArgs) {
   if (!session.get('strava_refresh_token'))
     return redirect(
       getOAuthRedirectUrl({
+        base_url: new URL(request.url).origin,
         client_id: context.env.PUBLIC_STRAVA_CLIENT_ID,
       }),
     )
 
-  const activities = await strava?.activities.getLoggedInAthleteActivities()
+  const activities = await strava?.activities.getLoggedInAthleteActivities({
+    per_page: 200,
+  })
 
-  return defer({activities})
+  return defer({
+    activities: activities?.map((activity) => ({
+      id: activity.id,
+      name: activity.name,
+      distance: activity.distance,
+      average_speed: activity.average_speed,
+    })),
+  })
 }
 
 export default function Activities() {
-  const {athlete} = useRouteLoaderData('root') as {
-    athlete: DetailedAthlete
-  }
-
   const {activities} = useLoaderData()
 
   return (
@@ -42,7 +48,7 @@ function ActivitiesList({activities}: {activities: DetailedActivity[]}) {
       <Box>
         {activities.map((activity) => (
           <div className="Activity" key={activity.id}>
-            <Link to="">
+            <Link to={`/activity/${activity.id}`}>
               <Text as="span" className="Activity__title">
                 {activity.name}
               </Text>

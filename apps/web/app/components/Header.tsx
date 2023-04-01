@@ -20,7 +20,7 @@ export function Header({
       </div>
 
       <div className="Header__nav">
-        {nav.map((link, index) => (
+        {nav.map((link) => (
           <Link key={link.href} to={link.href}>
             <Text as="span" size="large">
               {link.content}
